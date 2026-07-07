@@ -135,12 +135,9 @@ button {
 }
 
 .hero-band {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
-  align-items: end;
-  min-height: 250px;
-  padding: 52px 0 34px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 18px 0;
 }
 
 .eyebrow {
@@ -737,7 +734,6 @@ details p {
   }
 
   .topbar,
-  .hero-band,
   .metric-row,
   .song-strip,
   .simfile-row summary,
@@ -766,9 +762,7 @@ details p {
   }
 
   .hero-band {
-    align-items: start;
-    min-height: auto;
-    padding: 34px 0 24px;
+    padding: 12px 0;
   }
 
   .hero-console {

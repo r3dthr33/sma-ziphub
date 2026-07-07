@@ -78,10 +78,6 @@ function App() {
       </header>
 
       <section className="hero-band">
-        <div>
-          <p className="eyebrow">StepMania AMX static catalog</p>
-          <h1>Download packs, inspect the songs inside.</h1>
-        </div>
         <div className="hero-console" aria-label="Pack scan status">
           <span>{packs.length} pack</span>
           <span>{stats.songCount} songs</span>
