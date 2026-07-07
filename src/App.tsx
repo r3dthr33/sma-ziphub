@@ -61,7 +61,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.7</strong>
+            <strong>v0.0.8</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -352,26 +352,26 @@ function SimfileRow({ song }: { song: SongRecord }) {
         onClick={() => setChartsVisible((visible) => !visible)}
         type="button"
       >
-        <span className="simfile-main">
-          <small>{song.groupName || "Group"}</small>
-          <strong>{displayTitle}</strong>
-          <small>{displayArtist || "Unknown artist"}</small>
-        </span>
+        <div className="simfile-main">
+          <p>{song.groupName || "Group"}</p>
+          <h3>{displayTitle}</h3>
+          <p>{displayArtist || "Unknown artist"}</p>
+        </div>
 
-        <span className="simfile-meta">
-          <span>
+        <div className="simfile-meta">
+          <div>
             <small>BPM</small>
             <strong>{song.bpm?.display ?? "?"}</strong>
-          </span>
-          <span className="simfile-level">
+          </div>
+          <div className="simfile-level">
             <small>LV</small>
             <strong>{levelRange === "Unrated" ? "?" : levelRange}</strong>
-          </span>
-          <span>
+          </div>
+          <div>
             <small>Charts</small>
             <strong>{song.steps.length}</strong>
-          </span>
-        </span>
+          </div>
+        </div>
 
         <span className="simfile-cue">{chartsVisible ? "Hide" : "View"}</span>
       </button>

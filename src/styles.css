@@ -533,11 +533,10 @@ select option {
 .simfile-stack {
   display: grid;
   gap: 10px;
-  max-height: min(760px, 72vh);
-  overflow-y: auto;
-  padding-right: 4px;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
   scrollbar-width: none;
-  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 34px), transparent 100%);
 }
 
 .simfile-entry {
@@ -545,7 +544,6 @@ select option {
   border: 1px solid rgba(125, 242, 255, 0.22);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.055);
-  overflow: hidden;
 }
 
 .simfile-entry[aria-expanded="true"] {
@@ -559,8 +557,8 @@ select option {
   gap: 14px;
   align-items: center;
   width: 100%;
-  min-height: 86px;
-  padding: 12px 14px;
+  min-height: 0;
+  padding: 16px;
   border: 0;
   background: transparent;
   color: #eef7ff;
@@ -584,26 +582,28 @@ select option {
 
 .simfile-main {
   display: grid;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
 }
 
-.simfile-main strong,
-.simfile-main small {
+.simfile-main h3,
+.simfile-main p {
   display: block;
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.simfile-main strong {
+.simfile-main h3 {
   color: #eef7ff;
   font-size: 1.12rem;
   line-height: 1.1;
 }
 
-.simfile-main small {
+.simfile-main p {
   color: #99b8c4;
+  font-size: 0.86rem;
   line-height: 1.15;
 }
 
@@ -613,7 +613,7 @@ select option {
   gap: 8px;
 }
 
-.simfile-meta > span {
+.simfile-meta > div {
   display: grid;
   gap: 2px;
   min-height: 44px;
@@ -935,11 +935,11 @@ details p {
     gap: 2px;
   }
 
-  .simfile-main small {
+  .simfile-main p {
     font-size: 0.78rem;
   }
 
-  .simfile-main strong {
+  .simfile-main h3 {
     font-size: 0.98rem;
   }
 
@@ -948,7 +948,7 @@ details p {
     gap: 6px;
   }
 
-  .simfile-meta > span {
+  .simfile-meta > div {
     min-height: 32px;
     padding: 0 6px;
   }
