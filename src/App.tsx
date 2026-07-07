@@ -80,7 +80,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.35</strong>
+            <strong>v0.0.36</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -776,72 +776,76 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
         />
       )}
 
-      <div className="detail-grid">
-        <span>
-          Simfiles
-          <strong>{pack.songs.length}</strong>
-        </span>
-        <span>
-          Charts
-          <strong>{getPackChartCount(pack)}</strong>
-        </span>
-        <span>
-          Audio total
-          <strong>{formatDuration(getPackDuration(pack))}</strong>
-        </span>
-        <span>
-          Audio size
-          <strong>{formatBytes(getPackAudioSize(pack))}</strong>
-        </span>
-        <span>
-          Level range
-          <strong>{getPackLevelRange(pack)}</strong>
-        </span>
-        <span>
-          Peak chart
-          <strong>{topChart ? `Lv ${topChart.level}` : "Unknown"}</strong>
-        </span>
-      </div>
+      {!editingPack && (
+        <>
+          <div className="detail-grid">
+            <span>
+              Simfiles
+              <strong>{pack.songs.length}</strong>
+            </span>
+            <span>
+              Charts
+              <strong>{getPackChartCount(pack)}</strong>
+            </span>
+            <span>
+              Audio total
+              <strong>{formatDuration(getPackDuration(pack))}</strong>
+            </span>
+            <span>
+              Audio size
+              <strong>{formatBytes(getPackAudioSize(pack))}</strong>
+            </span>
+            <span>
+              Level range
+              <strong>{getPackLevelRange(pack)}</strong>
+            </span>
+            <span>
+              Peak chart
+              <strong>{topChart ? `Lv ${topChart.level}` : "Unknown"}</strong>
+            </span>
+          </div>
 
-      <div className="group-strip">
-        <h2>Groups included</h2>
-        <div>
-          <button
-            aria-pressed={selectedGroup === "all"}
-            className="group-pill"
-            onClick={() => setSelectedGroup("all")}
-            type="button"
-          >
-            <strong>All groups</strong>
-            <small>
-              {pack.songs.length} simfiles, {getPackChartCount(pack)} charts
-            </small>
-          </button>
-          {packGroups.map((group) => (
-            <button
-              aria-pressed={selectedGroup === group.name}
-              className="group-pill"
-              key={group.name}
-              onClick={() => setSelectedGroup(group.name)}
-              type="button"
-            >
-              <strong>{group.name}</strong>
-              <small>
-                {group.songCount} simfiles, {group.chartCount} charts
-              </small>
-            </button>
-          ))}
-        </div>
-      </div>
+          <div className="group-strip">
+            <h2>Groups included</h2>
+            <div>
+              <button
+                aria-pressed={selectedGroup === "all"}
+                className="group-pill"
+                onClick={() => setSelectedGroup("all")}
+                type="button"
+              >
+                <strong>All groups</strong>
+                <small>
+                  {pack.songs.length} simfiles, {getPackChartCount(pack)} charts
+                </small>
+              </button>
+              {packGroups.map((group) => (
+                <button
+                  aria-pressed={selectedGroup === group.name}
+                  className="group-pill"
+                  key={group.name}
+                  onClick={() => setSelectedGroup(group.name)}
+                  type="button"
+                >
+                  <strong>{group.name}</strong>
+                  <small>
+                    {group.songCount} simfiles, {group.chartCount} charts
+                  </small>
+                </button>
+              ))}
+            </div>
+          </div>
 
-      <section className="pack-simfiles">
-        <h2>{selectedGroup === "all" ? "Simfiles inside" : `Simfiles in ${selectedGroup}`}</h2>
-        <div className="simfile-stack">
-          {visibleSongs.map((song) => (
-            <SimfileRow key={song.id} song={song} />
-          ))}
-        </div>
-      </section>
+          <section className="pack-simfiles">
+            <h2>{selectedGroup === "all" ? "Simfiles inside" : `Simfiles in ${selectedGroup}`}</h2>
+            <div className="simfile-stack">
+              {visibleSongs.map((song) => (
+                <SimfileRow key={song.id} song={song} />
+              ))}
+            </div>
+          </section>
+        </>
+      )}
     </div>
   );
 }
