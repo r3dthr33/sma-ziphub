@@ -64,7 +64,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.20</strong>
+            <strong>v0.0.21</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -296,7 +296,9 @@ function Database({
             >
               <span className="pack-score">
                 <span className="level-chip">{getPackLevelRange(pack)}</span>
-                <small>{(seededScore(pack.id, 35, 50) / 10).toFixed(1)} rating</small>
+                <small className="pack-stars" aria-label={`${(seededScore(pack.id, 35, 50) / 10).toFixed(1)} rating`}>
+                  {getRatingStars(seededScore(pack.id, 35, 50) / 10)}
+                </small>
               </span>
               <span>
                 <strong>{pack.name}</strong>
@@ -415,6 +417,11 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
       </section>
     </div>
   );
+}
+
+function getRatingStars(score: number) {
+  const filled = Math.round(score);
+  return Array.from({ length: 5 }, (_, index) => (index < filled ? "★" : "☆")).join("");
 }
 
 function PackRating({ pack }: { pack: PackEntry }) {

@@ -511,11 +511,13 @@ select option {
 }
 
 .pack-score small {
-  color: var(--muted);
+  color: var(--accent);
   font-size: 0.78rem;
   font-weight: 850;
+  letter-spacing: 0;
   line-height: 1;
   text-align: center;
+  text-shadow: 0 0 10px rgba(125, 242, 255, 0.32);
 }
 
 .level-chip {
