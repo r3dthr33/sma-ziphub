@@ -62,7 +62,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.12</strong>
+            <strong>v0.0.13</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -277,7 +277,7 @@ function Database({
 
       <div className="song-wheel pack-browser" aria-live="polite">
         {viewingPack ? (
-          <PackContents pack={selectedPack} onBack={() => setViewingPack(false)} />
+          <PackContents key={selectedPack.id} pack={selectedPack} onBack={() => setViewingPack(false)} />
         ) : filteredPacks.length === 0 ? (
           <div className="empty-state">
             <strong>No packs found</strong>
@@ -311,8 +311,11 @@ function Database({
 }
 
 function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void }) {
+  const [selectedGroup, setSelectedGroup] = useState("all");
   const topChart = getTopPackChart(pack);
   const payload = `smamx://install-pack?pack=${encodeURIComponent(pack.id)}&url=${encodeURIComponent(`https://r3dthr33.github.io/sma-ziphub/packs/${pack.id}.smzip`)}`;
+  const packGroups = getPackGroups(pack);
+  const visibleSongs = selectedGroup === "all" ? pack.songs : pack.songs.filter((song) => (song.groupName || pack.name) === selectedGroup);
 
   return (
     <div className="pack-contents">
@@ -370,21 +373,38 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
       <div className="group-strip">
         <h2>Groups included</h2>
         <div>
-          {getPackGroups(pack).map((group) => (
-            <span className="group-pill" key={group.name}>
+          <button
+            aria-pressed={selectedGroup === "all"}
+            className="group-pill"
+            onClick={() => setSelectedGroup("all")}
+            type="button"
+          >
+            <strong>All groups</strong>
+            <small>
+              {pack.songs.length} simfiles, {getPackChartCount(pack)} charts
+            </small>
+          </button>
+          {packGroups.map((group) => (
+            <button
+              aria-pressed={selectedGroup === group.name}
+              className="group-pill"
+              key={group.name}
+              onClick={() => setSelectedGroup(group.name)}
+              type="button"
+            >
               <strong>{group.name}</strong>
               <small>
                 {group.songCount} simfiles, {group.chartCount} charts
               </small>
-            </span>
+            </button>
           ))}
         </div>
       </div>
 
       <section className="pack-simfiles">
-        <h2>Simfiles inside</h2>
+        <h2>{selectedGroup === "all" ? "Simfiles inside" : `Simfiles in ${selectedGroup}`}</h2>
         <div className="simfile-stack">
-          {pack.songs.map((song) => (
+          {visibleSongs.map((song) => (
             <SimfileRow key={song.id} song={song} />
           ))}
         </div>
@@ -415,7 +435,6 @@ function SimfileRow({ song }: { song: SongRecord }) {
         type="button"
       >
         <div className="simfile-main">
-          <p>{song.groupName || "Group"}</p>
           <h3>{displayTitle}</h3>
           <p>{displayArtist || "Unknown artist"}</p>
         </div>
