@@ -392,6 +392,39 @@ label {
   font-weight: 750;
 }
 
+.filter-group {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+.style-toggle-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.style-toggle-list button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--muted-strong);
+  padding: 0 10px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.style-toggle-list button:hover,
+.style-toggle-list button.active {
+  border-color: var(--accent);
+  background: rgba(125, 242, 255, 0.16);
+  color: var(--text);
+}
+
 input,
 select {
   width: 100%;
@@ -421,7 +454,6 @@ select option {
   overflow: auto;
   padding: 10px;
   scrollbar-width: none;
-  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 18px), transparent 100%);
 }
 
 .song-wheel::-webkit-scrollbar,
@@ -478,7 +510,7 @@ select option {
 }
 
 .pack-strip {
-  grid-template-columns: 82px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr);
   align-items: center;
 }
 
@@ -490,10 +522,23 @@ select option {
   white-space: nowrap;
 }
 
-.level-chip {
+.pack-score {
   display: grid;
   grid-row: 1 / span 2;
   align-self: center;
+  gap: 6px;
+}
+
+.pack-score small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1;
+  text-align: center;
+}
+
+.level-chip {
+  display: grid;
   min-height: 42px;
   place-items: center;
   border-radius: 6px;

@@ -30,7 +30,7 @@ const sections: Array<{ id: Section; label: string }> = [
 function App() {
   const [activeSection, setActiveSection] = useState<Section>("summary");
   const [query, setQuery] = useState("");
-  const [styleFilter, setStyleFilter] = useState("all");
+  const [styleFilters, setStyleFilters] = useState<string[]>([]);
   const [sortMode, setSortMode] = useState<SortMode>("rating");
   const [selectedPackId, setSelectedPackId] = useState(packs[0]?.id ?? "");
   const [viewingPack, setViewingPack] = useState(false);
@@ -45,11 +45,13 @@ function App() {
         const songText = pack.songs.map((song) => `${song.title} ${song.artist} ${song.folderName}`).join(" ");
         const text = `${pack.name} ${songText}`.toLowerCase();
         const matchesQuery = !cleanQuery || text.includes(cleanQuery);
-        const matchesStyle = styleFilter === "all" || pack.songs.some((song) => song.steps.some((step) => step.style === styleFilter));
+        const matchesStyle =
+          styleFilters.length === 0 ||
+          styleFilters.every((style) => pack.songs.some((song) => song.steps.some((step) => step.style === style)));
         return matchesQuery && matchesStyle;
       })
       .sort((a, b) => sortPacks(a, b, sortMode));
-  }, [query, sortMode, styleFilter]);
+  }, [query, sortMode, styleFilters]);
 
   const stats = useMemo(() => buildStats(songs), []);
   const visibleCounters = useMemo(
@@ -62,7 +64,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.17</strong>
+            <strong>v0.0.18</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -116,10 +118,13 @@ function App() {
           setSelectedPackId={setSelectedPackId}
           setViewingPack={setViewingPack}
           setSortMode={setSortMode}
-          setStyleFilter={setStyleFilter}
           sortMode={sortMode}
-          styleFilter={styleFilter}
+          styleFilters={styleFilters}
           styles={styles}
+          toggleStyleFilter={(style) =>
+            setStyleFilters((current) => (current.includes(style) ? current.filter((item) => item !== style) : [...current, style]))
+          }
+          clearStyleFilters={() => setStyleFilters([])}
           viewingPack={viewingPack}
         />
       )}
@@ -220,12 +225,14 @@ function Database({
   setSelectedPackId,
   setViewingPack,
   setSortMode,
-  setStyleFilter,
   sortMode,
-  styleFilter,
+  styleFilters,
   styles,
+  toggleStyleFilter,
+  clearStyleFilters,
   viewingPack,
 }: {
+  clearStyleFilters: () => void;
   filteredPacks: PackEntry[];
   query: string;
   selectedPack: PackEntry;
@@ -233,10 +240,10 @@ function Database({
   setSelectedPackId: (value: string) => void;
   setViewingPack: (value: boolean) => void;
   setSortMode: (value: SortMode) => void;
-  setStyleFilter: (value: string) => void;
   sortMode: SortMode;
-  styleFilter: string;
+  styleFilters: string[];
   styles: string[];
+  toggleStyleFilter: (style: string) => void;
   viewingPack: boolean;
 }) {
   return (
@@ -252,17 +259,30 @@ function Database({
           />
         </label>
 
-        <label>
-          Contains style
-          <select onChange={(event) => setStyleFilter(event.target.value)} value={styleFilter}>
-            <option value="all">All styles</option>
+        <div className="filter-group">
+          <span>Contains styles</span>
+          <div className="style-toggle-list" role="group" aria-label="Contains styles">
+            <button
+              aria-pressed={styleFilters.length === 0}
+              className={styleFilters.length === 0 ? "active" : ""}
+              onClick={clearStyleFilters}
+              type="button"
+            >
+              All styles
+            </button>
             {styles.map((style) => (
-              <option key={style} value={style}>
+              <button
+                aria-pressed={styleFilters.includes(style)}
+                className={styleFilters.includes(style) ? "active" : ""}
+                key={style}
+                onClick={() => toggleStyleFilter(style)}
+                type="button"
+              >
                 {style}
-              </option>
+              </button>
             ))}
-          </select>
-        </label>
+          </div>
+        </div>
 
         <label>
           Sort packs
@@ -294,7 +314,10 @@ function Database({
               }}
               type="button"
             >
-              <span className="level-chip">{getPackLevelRange(pack)}</span>
+              <span className="pack-score">
+                <span className="level-chip">{getPackLevelRange(pack)}</span>
+                <small>{(seededScore(pack.id, 35, 50) / 10).toFixed(1)} rating</small>
+              </span>
               <span>
                 <strong>{pack.name}</strong>
                 <small>
