@@ -1,6 +1,8 @@
-# SMAMX Vault
+# sma-smaziphub
 
-Static prototype for browsing StepMania AMX simfile metadata and preparing QR-ready SMZIP downloads.
+Front end for the StepMania AMX SMZIP download hub.
+
+SMAMX Vault is a static prototype for browsing StepMania AMX simfile metadata and preparing QR-ready SMZIP downloads.
 
 ## Sections
 
