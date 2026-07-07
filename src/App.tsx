@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type SetStateAction } from "react";
 import {
   formatBytes,
   formatDuration,
@@ -80,7 +80,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.34</strong>
+            <strong>v0.0.35</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -323,62 +323,6 @@ function Database({
     setNewPackSaved(false);
   }
 
-  function updateNewPackField(field: "name" | "author" | "sourcePath", value: string) {
-    markNewPackChanged();
-    setNewPackDraft((current) => ({ ...current, [field]: value }));
-  }
-
-  function updateNewPackGroup(index: number, field: "name" | "songCount" | "chartCount", value: string) {
-    markNewPackChanged();
-    setNewPackDraft((current) => ({
-      ...current,
-      groups: (current.groups ?? getPackGroups(current)).map((group, groupIndex) =>
-        groupIndex === index
-          ? {
-              ...group,
-              [field]: field === "name" ? value : parseInt(value, 10) || 0,
-            }
-          : group,
-      ),
-    }));
-  }
-
-  function updateNewPackSong(index: number, field: "folderName" | "groupName" | "title" | "artist", value: string) {
-    markNewPackChanged();
-    setNewPackDraft((current) => ({
-      ...current,
-      songs: current.songs.map((song, songIndex) => (songIndex === index ? { ...song, [field]: value } : song)),
-    }));
-  }
-
-  function updateNewPackChart(
-    songIndex: number,
-    chartIndex: number,
-    field: "style" | "description" | "difficulty" | "levelRaw" | "stepmaker",
-    value: string,
-  ) {
-    markNewPackChanged();
-    setNewPackDraft((current) => ({
-      ...current,
-      songs: current.songs.map((song, currentSongIndex) =>
-        currentSongIndex === songIndex
-          ? {
-              ...song,
-              steps: song.steps.map((step, currentChartIndex) =>
-                currentChartIndex === chartIndex
-                  ? {
-                      ...step,
-                      [field]: value,
-                      ...(field === "levelRaw" ? { level: parseInt(value, 10) || null } : {}),
-                    }
-                  : step,
-              ),
-            }
-          : song,
-      ),
-    }));
-  }
-
   function saveNewPackDraft() {
     window.localStorage.setItem("smamx-new-pack-draft", JSON.stringify({ pack: newPackDraft, downloadUrl: newPackDownloadUrl, notes: newPackNotes }));
     setNewPackSaved(true);
@@ -479,141 +423,29 @@ function Database({
             </div>
 
             {addingPack && (
-              <section className="pack-editor new-pack-editor" aria-label="Add new pack">
-                <div>
-                  <h2>Add new pack</h2>
-                  <small>{newPackSaved ? "Draft saved in this browser" : "Seeded from Aldo_MX"}</small>
-                </div>
-
-                <label>
-                  Pack name
-                  <input onChange={(event) => updateNewPackField("name", event.target.value)} value={newPackDraft.name} />
-                </label>
-
-                <label>
-                  Author
-                  <input onChange={(event) => updateNewPackField("author", event.target.value)} value={newPackDraft.author} />
-                </label>
-
-                <label>
-                  Download URL
-                  <input
-                    onChange={(event) => {
-                      markNewPackChanged();
-                      setNewPackDownloadUrl(event.target.value);
-                    }}
-                    value={newPackDownloadUrl}
-                  />
-                </label>
-
-                <label>
-                  Source path
-                  <input onChange={(event) => updateNewPackField("sourcePath", event.target.value)} value={newPackDraft.sourcePath} />
-                </label>
-
-                <div className="detail-grid editor-detail-grid">
-                  <span>
-                    Simfiles
-                    <strong>{newPackDraft.songs.length}</strong>
-                  </span>
-                  <span>
-                    Charts
-                    <strong>{getPackChartCount(newPackDraft)}</strong>
-                  </span>
-                  <span>
-                    Level range
-                    <strong>{getPackLevelRange(newPackDraft)}</strong>
-                  </span>
-                  <span>
-                    Groups
-                    <strong>{newPackDraft.groups?.length ?? 1}</strong>
-                  </span>
-                </div>
-
-                <section className="editor-groups">
-                  <h3>Groups included</h3>
-                  {(newPackDraft.groups ?? getPackGroups(newPackDraft)).map((group, index) => (
-                    <div className="editor-group-row" key={`${group.name}-${index}`}>
-                      <label>
-                        Group
-                        <input onChange={(event) => updateNewPackGroup(index, "name", event.target.value)} value={group.name} />
-                      </label>
-                      <label>
-                        Simfiles
-                        <input onChange={(event) => updateNewPackGroup(index, "songCount", event.target.value)} value={group.songCount} />
-                      </label>
-                      <label>
-                        Charts
-                        <input onChange={(event) => updateNewPackGroup(index, "chartCount", event.target.value)} value={group.chartCount} />
-                      </label>
-                    </div>
-                  ))}
-                </section>
-
-                <section className="editor-simfiles">
-                  <h3>Simfiles inside</h3>
-                  {newPackDraft.songs.map((song, songIndex) => (
-                    <article className="editor-simfile" key={`${song.id}-${songIndex}`}>
-                      <div className="editor-simfile-fields">
-                        <label>
-                          Folder
-                          <input onChange={(event) => updateNewPackSong(songIndex, "folderName", event.target.value)} value={song.folderName} />
-                        </label>
-                        <label>
-                          Group
-                          <input onChange={(event) => updateNewPackSong(songIndex, "groupName", event.target.value)} value={song.groupName ?? ""} />
-                        </label>
-                        <label>
-                          Title
-                          <input onChange={(event) => updateNewPackSong(songIndex, "title", event.target.value)} value={song.title} />
-                        </label>
-                        <label>
-                          Artist
-                          <input onChange={(event) => updateNewPackSong(songIndex, "artist", event.target.value)} value={song.artist} />
-                        </label>
-                      </div>
-
-                      <div className="editor-chart-list">
-                        {song.steps.map((step, chartIndex) => (
-                          <div className="editor-chart-row" key={`${song.id}-${step.sourceFile}-${chartIndex}`}>
-                            <label>
-                              Lv
-                              <input onChange={(event) => updateNewPackChart(songIndex, chartIndex, "levelRaw", event.target.value)} value={step.levelRaw} />
-                            </label>
-                            <label>
-                              Style
-                              <input onChange={(event) => updateNewPackChart(songIndex, chartIndex, "style", event.target.value)} value={step.style} />
-                            </label>
-                            <label>
-                              Chart
-                              <input onChange={(event) => updateNewPackChart(songIndex, chartIndex, "description", event.target.value)} value={step.description} />
-                            </label>
-                            <label>
-                              StepMaker
-                              <input onChange={(event) => updateNewPackChart(songIndex, chartIndex, "stepmaker", event.target.value)} value={step.stepmaker} />
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </article>
-                  ))}
-                </section>
-
-                <label className="editor-notes">
-                  Notes
-                  <textarea
-                    onChange={(event) => {
-                      markNewPackChanged();
-                      setNewPackNotes(event.target.value);
-                    }}
-                    value={newPackNotes}
-                  />
-                </label>
-
-                <button className="save-draft-button" onClick={saveNewPackDraft} type="button">
-                  Save new pack draft
-                </button>
-              </section>
+              <PackEditorForm
+                ariaLabel="Add new pack"
+                className="new-pack-editor"
+                downloadUrl={newPackDownloadUrl}
+                notes={newPackNotes}
+                onChangeDownloadUrl={(value) => {
+                  markNewPackChanged();
+                  setNewPackDownloadUrl(value);
+                }}
+                onChangeNotes={(value) => {
+                  markNewPackChanged();
+                  setNewPackNotes(value);
+                }}
+                onChangePack={(updater) => {
+                  markNewPackChanged();
+                  setNewPackDraft(updater);
+                }}
+                onSave={saveNewPackDraft}
+                pack={newPackDraft}
+                saveLabel="Save new pack draft"
+                statusText={newPackSaved ? "Draft saved in this browser" : "Seeded from Aldo_MX"}
+                title="Add new pack"
+              />
             )}
 
             {addingPack ? null : filteredPacks.length === 0 ? (
@@ -656,6 +488,212 @@ function Database({
   );
 }
 
+function PackEditorForm({
+  ariaLabel,
+  className = "",
+  downloadUrl,
+  notes,
+  onChangeDownloadUrl,
+  onChangeNotes,
+  onChangePack,
+  onSave,
+  pack,
+  saveLabel,
+  statusText,
+  title,
+}: {
+  ariaLabel: string;
+  className?: string;
+  downloadUrl: string;
+  notes: string;
+  onChangeDownloadUrl: (value: string) => void;
+  onChangeNotes: (value: string) => void;
+  onChangePack: (updater: SetStateAction<PackEntry>) => void;
+  onSave: () => void;
+  pack: PackEntry;
+  saveLabel: string;
+  statusText: string;
+  title: string;
+}) {
+  function updatePackField(field: "name" | "author" | "sourcePath", value: string) {
+    onChangePack((current) => ({ ...current, [field]: value }));
+  }
+
+  function updatePackGroup(index: number, field: "name" | "songCount" | "chartCount", value: string) {
+    onChangePack((current) => ({
+      ...current,
+      groups: (current.groups ?? getPackGroups(current)).map((group, groupIndex) =>
+        groupIndex === index
+          ? {
+              ...group,
+              [field]: field === "name" ? value : parseInt(value, 10) || 0,
+            }
+          : group,
+      ),
+    }));
+  }
+
+  function updatePackSong(index: number, field: "folderName" | "groupName" | "title" | "artist", value: string) {
+    onChangePack((current) => ({
+      ...current,
+      songs: current.songs.map((song, songIndex) => (songIndex === index ? { ...song, [field]: value } : song)),
+    }));
+  }
+
+  function updatePackChart(
+    songIndex: number,
+    chartIndex: number,
+    field: "style" | "description" | "difficulty" | "levelRaw" | "stepmaker",
+    value: string,
+  ) {
+    onChangePack((current) => ({
+      ...current,
+      songs: current.songs.map((song, currentSongIndex) =>
+        currentSongIndex === songIndex
+          ? {
+              ...song,
+              steps: song.steps.map((step, currentChartIndex) =>
+                currentChartIndex === chartIndex
+                  ? {
+                      ...step,
+                      [field]: value,
+                      ...(field === "levelRaw" ? { level: parseInt(value, 10) || null } : {}),
+                    }
+                  : step,
+              ),
+            }
+          : song,
+      ),
+    }));
+  }
+
+  return (
+    <section className={`pack-editor ${className}`.trim()} aria-label={ariaLabel}>
+      <div>
+        <h2>{title}</h2>
+        <small>{statusText}</small>
+      </div>
+
+      <label>
+        Pack name
+        <input onChange={(event) => updatePackField("name", event.target.value)} value={pack.name} />
+      </label>
+
+      <label>
+        Author
+        <input onChange={(event) => updatePackField("author", event.target.value)} value={pack.author} />
+      </label>
+
+      <label>
+        Download URL
+        <input onChange={(event) => onChangeDownloadUrl(event.target.value)} value={downloadUrl} />
+      </label>
+
+      <label>
+        Source path
+        <input onChange={(event) => updatePackField("sourcePath", event.target.value)} value={pack.sourcePath} />
+      </label>
+
+      <div className="detail-grid editor-detail-grid">
+        <span>
+          Simfiles
+          <strong>{pack.songs.length}</strong>
+        </span>
+        <span>
+          Charts
+          <strong>{getPackChartCount(pack)}</strong>
+        </span>
+        <span>
+          Level range
+          <strong>{getPackLevelRange(pack)}</strong>
+        </span>
+        <span>
+          Groups
+          <strong>{pack.groups?.length ?? getPackGroups(pack).length}</strong>
+        </span>
+      </div>
+
+      <section className="editor-groups">
+        <h3>Groups included</h3>
+        {(pack.groups ?? getPackGroups(pack)).map((group, index) => (
+          <div className="editor-group-row" key={`${group.name}-${index}`}>
+            <label>
+              Group
+              <input onChange={(event) => updatePackGroup(index, "name", event.target.value)} value={group.name} />
+            </label>
+            <label>
+              Simfiles
+              <input onChange={(event) => updatePackGroup(index, "songCount", event.target.value)} value={group.songCount} />
+            </label>
+            <label>
+              Charts
+              <input onChange={(event) => updatePackGroup(index, "chartCount", event.target.value)} value={group.chartCount} />
+            </label>
+          </div>
+        ))}
+      </section>
+
+      <section className="editor-simfiles">
+        <h3>Simfiles inside</h3>
+        {pack.songs.map((song, songIndex) => (
+          <article className="editor-simfile" key={`${song.id}-${songIndex}`}>
+            <div className="editor-simfile-fields">
+              <label>
+                Folder
+                <input onChange={(event) => updatePackSong(songIndex, "folderName", event.target.value)} value={song.folderName} />
+              </label>
+              <label>
+                Group
+                <input onChange={(event) => updatePackSong(songIndex, "groupName", event.target.value)} value={song.groupName ?? ""} />
+              </label>
+              <label>
+                Title
+                <input onChange={(event) => updatePackSong(songIndex, "title", event.target.value)} value={song.title} />
+              </label>
+              <label>
+                Artist
+                <input onChange={(event) => updatePackSong(songIndex, "artist", event.target.value)} value={song.artist} />
+              </label>
+            </div>
+
+            <div className="editor-chart-list">
+              {song.steps.map((step, chartIndex) => (
+                <div className="editor-chart-row" key={`${song.id}-${step.sourceFile}-${chartIndex}`}>
+                  <label>
+                    Lv
+                    <input onChange={(event) => updatePackChart(songIndex, chartIndex, "levelRaw", event.target.value)} value={step.levelRaw} />
+                  </label>
+                  <label>
+                    Style
+                    <input onChange={(event) => updatePackChart(songIndex, chartIndex, "style", event.target.value)} value={step.style} />
+                  </label>
+                  <label>
+                    Chart
+                    <input onChange={(event) => updatePackChart(songIndex, chartIndex, "description", event.target.value)} value={step.description} />
+                  </label>
+                  <label>
+                    StepMaker
+                    <input onChange={(event) => updatePackChart(songIndex, chartIndex, "stepmaker", event.target.value)} value={step.stepmaker} />
+                  </label>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <label className="editor-notes">
+        Notes
+        <textarea onChange={(event) => onChangeNotes(event.target.value)} value={notes} />
+      </label>
+
+      <button className="save-draft-button" onClick={onSave} type="button">
+        {saveLabel}
+      </button>
+    </section>
+  );
+}
+
 function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void }) {
   const [selectedGroup, setSelectedGroup] = useState("all");
   const [editingPack, setEditingPack] = useState(false);
@@ -666,21 +704,16 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
   const visibleSongs = selectedGroup === "all" ? pack.songs : pack.songs.filter((song) => (song.groupName || pack.name) === selectedGroup);
   const draftKey = `smamx-pack-edit:${pack.id}`;
   const storedDraft = readPackDraft(draftKey);
-  const [packDraft, setPackDraft] = useState(() => ({
-    name: storedDraft?.name ?? pack.name,
-    author: storedDraft?.author ?? pack.author,
-    downloadUrl: storedDraft?.downloadUrl ?? `https://r3dthr33.github.io/sma-ziphub/packs/${pack.id}.smzip`,
-    sourcePath: storedDraft?.sourcePath ?? pack.sourcePath,
-    notes: storedDraft?.notes ?? "",
-  }));
+  const [packDraft, setPackDraft] = useState<PackEntry>(() => storedDraft?.pack ?? clonePack(pack));
+  const [packDownloadUrl, setPackDownloadUrl] = useState(storedDraft?.downloadUrl ?? `https://r3dthr33.github.io/sma-ziphub/packs/${pack.id}.smzip`);
+  const [packNotes, setPackNotes] = useState(storedDraft?.notes ?? "");
 
-  function updateDraft(field: keyof typeof packDraft, value: string) {
+  function markDraftChanged() {
     setDraftSaved(false);
-    setPackDraft((current) => ({ ...current, [field]: value }));
   }
 
   function saveDraft() {
-    window.localStorage.setItem(draftKey, JSON.stringify(packDraft));
+    window.localStorage.setItem(draftKey, JSON.stringify({ pack: packDraft, downloadUrl: packDownloadUrl, notes: packNotes }));
     setDraftSaved(true);
   }
 
@@ -719,41 +752,28 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
       </div>
 
       {editingPack && (
-        <section className="pack-editor" aria-label={`Edit ${pack.name}`}>
-          <div>
-            <h2>Edit pack</h2>
-            <small>{draftSaved ? "Draft saved in this browser" : "Local draft"}</small>
-          </div>
-
-          <label>
-            Pack name
-            <input onChange={(event) => updateDraft("name", event.target.value)} value={packDraft.name} />
-          </label>
-
-          <label>
-            Author
-            <input onChange={(event) => updateDraft("author", event.target.value)} value={packDraft.author} />
-          </label>
-
-          <label>
-            Download URL
-            <input onChange={(event) => updateDraft("downloadUrl", event.target.value)} value={packDraft.downloadUrl} />
-          </label>
-
-          <label>
-            Source path
-            <input onChange={(event) => updateDraft("sourcePath", event.target.value)} value={packDraft.sourcePath} />
-          </label>
-
-          <label className="editor-notes">
-            Notes
-            <textarea onChange={(event) => updateDraft("notes", event.target.value)} value={packDraft.notes} />
-          </label>
-
-          <button className="save-draft-button" onClick={saveDraft} type="button">
-            Save draft
-          </button>
-        </section>
+        <PackEditorForm
+          ariaLabel={`Edit ${pack.name}`}
+          downloadUrl={packDownloadUrl}
+          notes={packNotes}
+          onChangeDownloadUrl={(value) => {
+            markDraftChanged();
+            setPackDownloadUrl(value);
+          }}
+          onChangeNotes={(value) => {
+            markDraftChanged();
+            setPackNotes(value);
+          }}
+          onChangePack={(updater) => {
+            markDraftChanged();
+            setPackDraft(updater);
+          }}
+          onSave={saveDraft}
+          pack={packDraft}
+          saveLabel="Save draft"
+          statusText={draftSaved ? "Draft saved in this browser" : "Local draft"}
+          title="Edit pack"
+        />
       )}
 
       <div className="detail-grid">
@@ -839,7 +859,7 @@ function clonePack(pack: PackEntry): PackEntry {
   return JSON.parse(JSON.stringify(pack));
 }
 
-function readPackDraft(key: string): { name?: string; author?: string; downloadUrl?: string; sourcePath?: string; notes?: string } | null {
+function readPackDraft(key: string): { pack?: PackEntry; downloadUrl?: string; notes?: string } | null {
   return readLocalDraft(key);
 }
 

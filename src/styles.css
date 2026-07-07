@@ -663,6 +663,7 @@ select option {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  justify-content: space-between;
 }
 
 .back-button,
@@ -686,7 +687,9 @@ select option {
 }
 
 .edit-pack-button {
-  background: rgba(125, 242, 255, 0.11);
+  margin-left: auto;
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
 .save-draft-button {
