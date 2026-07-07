@@ -315,17 +315,20 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
 
 function SimfileRow({ song }: { song: SongRecord }) {
   const topChart = getTopChart(song);
+  const displayTitle = getSongDisplayTitle(song);
+  const displayArtist = song.metadata.artistTranslit || song.artist || getSongDisplayArtist(song);
 
   return (
-    <details className="simfile-row">
-      <summary>
+    <article className="simfile-row">
+      <div className="simfile-summary">
         <span>
-          <strong>{song.title}</strong>
-          <small>{song.artist}</small>
+          <strong>{displayTitle}</strong>
+          <small>{displayArtist}</small>
         </span>
         <em>{song.bpm?.display ?? "BPM ?"}</em>
         <b>{topChart ? `Lv ${topChart.level}` : getLevelRange(song)}</b>
-      </summary>
+        <i>{song.steps.length} charts</i>
+      </div>
       <div className="step-list">
         {song.steps.map((step) => (
           <div className="step-item" key={`${song.id}-${step.sourceFile}-${step.description}-${step.levelRaw}`}>
@@ -335,8 +338,30 @@ function SimfileRow({ song }: { song: SongRecord }) {
           </div>
         ))}
       </div>
-    </details>
+    </article>
   );
+}
+
+function getSongDisplayTitle(song: SongRecord): string {
+  if (song.metadata.titleTranslit) return song.metadata.titleTranslit;
+  if (song.title) return song.title;
+  const parsed = parseFolderName(song.folderName);
+  return parsed.title || song.folderName;
+}
+
+function getSongDisplayArtist(song: SongRecord): string {
+  const parsed = parseFolderName(song.folderName);
+  return parsed.artist;
+}
+
+function parseFolderName(folderName: string) {
+  const cleanName = folderName.replace(/^\[[^\]]+\]\s*/, "");
+  const separator = cleanName.indexOf(" - ");
+  if (separator === -1) return { artist: "", title: cleanName };
+  return {
+    artist: cleanName.slice(0, separator).trim(),
+    title: cleanName.slice(separator + 3).trim(),
+  };
 }
 
 function Faq() {

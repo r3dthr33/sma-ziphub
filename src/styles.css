@@ -531,45 +531,50 @@ select option {
   background: rgba(255, 255, 255, 0.05);
 }
 
-.simfile-row summary {
+.simfile-summary {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   gap: 12px;
   align-items: center;
   min-height: 70px;
   padding: 12px;
-  list-style: none;
 }
 
-.simfile-row summary::-webkit-details-marker {
-  display: none;
-}
-
-.simfile-row summary span,
-.simfile-row summary strong,
-.simfile-row summary small {
+.simfile-summary span,
+.simfile-summary strong,
+.simfile-summary small {
   display: block;
 }
 
-.simfile-row summary strong {
+.simfile-summary strong {
+  color: #eef7ff;
   overflow-wrap: anywhere;
   line-height: 1.15;
 }
 
-.simfile-row summary small,
-.simfile-row summary em {
+.simfile-summary small,
+.simfile-summary em,
+.simfile-summary i {
   color: #99b8c4;
   font-style: normal;
 }
 
-.simfile-row summary b {
+.simfile-summary b,
+.simfile-summary i {
   display: grid;
-  min-width: 54px;
+  min-width: 62px;
   min-height: 38px;
   place-items: center;
   border-radius: 6px;
+}
+
+.simfile-summary b {
   background: rgba(125, 242, 255, 0.15);
   color: #7df2ff;
+}
+
+.simfile-summary i {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .step-item {
@@ -727,7 +732,7 @@ details p {
   .topbar,
   .metric-row,
   .song-strip,
-  .simfile-row summary,
+  .simfile-summary,
   .qr-panel {
     grid-template-columns: 1fr;
   }
