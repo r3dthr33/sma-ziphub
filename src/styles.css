@@ -216,7 +216,7 @@ h2 {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
   gap: 14px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .metrics-ladder,
@@ -234,6 +234,7 @@ h2 {
 
 .metrics-ladder {
   display: grid;
+  align-self: start;
   gap: 8px;
   padding: 12px;
 }
