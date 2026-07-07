@@ -64,7 +64,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.18</strong>
+            <strong>v0.0.19</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -97,10 +97,6 @@ function App() {
       {activeSection === "summary" && (
         <Summary
           stats={stats}
-          onOpenDatabase={() => {
-            setViewingPack(false);
-            setActiveSection("database");
-          }}
           onOpenPack={(packId) => {
             setSelectedPackId(packId);
             setViewingPack(true);
@@ -136,11 +132,9 @@ function App() {
 
 function Summary({
   stats,
-  onOpenDatabase,
   onOpenPack,
 }: {
   stats: ReturnType<typeof buildStats>;
-  onOpenDatabase: () => void;
   onOpenPack: (packId: string) => void;
 }) {
   const highlights = [
@@ -209,9 +203,6 @@ function Summary({
           </div>
         </div>
 
-        <button className="primary-action" onClick={onOpenDatabase} type="button">
-          Open Pack Database
-        </button>
       </div>
     </section>
   );
@@ -348,6 +339,7 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
 
       <div className="pack-title-card">
         <div className="song-banner">
+          <PackRating pack={pack} />
           <span>SMZIP pack</span>
           <strong>{pack.name}</strong>
           <small>{pack.songs.length} simfiles included</small>
@@ -392,8 +384,6 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
           <strong>{topChart ? `Lv ${topChart.level}` : "Unknown"}</strong>
         </span>
       </div>
-
-      <PackRating pack={pack} />
 
       <div className="group-strip">
         <h2>Groups included</h2>
@@ -442,6 +432,7 @@ function PackRating({ pack }: { pack: PackEntry }) {
   const storageKey = `smamx-pack-rating:${pack.id}`;
   const catalogRating = seededScore(pack.id, 35, 50) / 10;
   const [userRating, setUserRating] = useState<number | null>(null);
+  const displayRating = userRating ?? Math.round(catalogRating);
 
   useEffect(() => {
     const storedRating = window.localStorage.getItem(storageKey);
@@ -453,35 +444,23 @@ function PackRating({ pack }: { pack: PackEntry }) {
     setUserRating(value);
   }
 
-  function clearRating() {
-    window.localStorage.removeItem(storageKey);
-    setUserRating(null);
-  }
-
   return (
-    <section className="pack-rating" aria-label={`Rating for ${pack.name}`}>
-      <div>
-        <span>Pack rating</span>
-        <strong>{userRating ? `${userRating.toFixed(1)} / 5` : `${catalogRating.toFixed(1)} catalog score`}</strong>
-      </div>
-
+    <div className="pack-rating" aria-label={`Rating for ${pack.name}`}>
+      <span>{userRating ? `${userRating} / 5` : `${catalogRating.toFixed(1)} score`}</span>
       <div className="rating-buttons" aria-label="Set your pack rating">
         {[1, 2, 3, 4, 5].map((rating) => (
           <button
-            aria-pressed={userRating === rating}
+            aria-label={`${rating} star rating`}
+            aria-pressed={displayRating >= rating}
             key={rating}
             onClick={() => saveRating(rating)}
             type="button"
           >
-            {rating}
+            {displayRating >= rating ? "★" : "☆"}
           </button>
         ))}
       </div>
-
-      <button className="rating-reset" disabled={!userRating} onClick={clearRating} type="button">
-        Clear
-      </button>
-    </section>
+    </div>
   );
 }
 
