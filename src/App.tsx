@@ -61,7 +61,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.3</strong>
+            <strong>v0.0.4</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -330,6 +330,7 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
 }
 
 function SimfileRow({ song }: { song: SongRecord }) {
+  const [chartsVisible, setChartsVisible] = useState(false);
   const topChart = getTopChart(song);
   const displayTitle = getSongDisplayTitle(song);
   const displayArtist = song.metadata.artistTranslit || song.artist || getSongDisplayArtist(song);
@@ -352,19 +353,23 @@ function SimfileRow({ song }: { song: SongRecord }) {
         <div className="simfile-card-stats">
           <span>BPM {song.bpm?.display ?? "?"}</span>
           <strong>{topChart ? `Lv ${topChart.level}` : getLevelRange(song)}</strong>
-          <span>{song.steps.length} charts</span>
+          <button onClick={() => setChartsVisible((visible) => !visible)} type="button">
+            {chartsVisible ? "Hide" : `${song.steps.length} charts`}
+          </button>
         </div>
       </header>
 
-      <div className="level-chip-list" aria-label={`Chart levels for ${displayTitle}`}>
-        {chartLevels.map((chart, index) => (
-          <span className="chart-level-chip" key={`${song.id}-${chart.style}-${chart.label}-${chart.level}-${index}`}>
-            <strong>Lv {chart.level}</strong>
-            <em>{chart.label}</em>
-            <small>{chart.style}</small>
-          </span>
-        ))}
-      </div>
+      {chartsVisible && (
+        <div className="level-chip-list" aria-label={`Chart levels for ${displayTitle}`}>
+          {chartLevels.map((chart, index) => (
+            <span className="chart-level-chip" key={`${song.id}-${chart.style}-${chart.label}-${chart.level}-${index}`}>
+              <strong>Lv {chart.level}</strong>
+              <em>{chart.label}</em>
+              <small>{chart.style}</small>
+            </span>
+          ))}
+        </div>
+      )}
     </article>
   );
 }

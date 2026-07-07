@@ -526,9 +526,9 @@ select option {
 
 .simfile-card {
   display: grid;
-  gap: 14px;
-  min-height: 170px;
-  padding: 18px;
+  gap: 10px;
+  min-height: 0;
+  padding: 14px;
   border: 1px solid rgba(125, 242, 255, 0.2);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.065);
@@ -537,8 +537,8 @@ select option {
 .simfile-card-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 18px;
-  align-items: start;
+  gap: 14px;
+  align-items: center;
 }
 
 .simfile-card-header p,
@@ -552,9 +552,9 @@ select option {
 }
 
 .simfile-card-header h3 {
-  margin-top: 4px;
+  margin-top: 2px;
   color: #eef7ff;
-  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
   line-height: 1.08;
   overflow-wrap: anywhere;
 }
@@ -562,22 +562,34 @@ select option {
 .simfile-card-stats {
   display: grid;
   grid-template-columns: repeat(3, auto);
-  gap: 8px;
+  gap: 6px;
 }
 
 .simfile-card-stats span,
-.simfile-card-stats strong {
+.simfile-card-stats strong,
+.simfile-card-stats button {
   display: grid;
-  min-height: 42px;
+  min-height: 36px;
   place-items: center;
   border-radius: 6px;
-  padding: 0 12px;
+  padding: 0 10px;
   white-space: nowrap;
 }
 
-.simfile-card-stats span {
+.simfile-card-stats span,
+.simfile-card-stats button {
+  border: 0;
   color: #b9d0d9;
   background: rgba(255, 255, 255, 0.055);
+}
+
+.simfile-card-stats button {
+  cursor: pointer;
+}
+
+.simfile-card-stats button:hover {
+  color: #eef7ff;
+  background: rgba(125, 242, 255, 0.14);
 }
 
 .simfile-card-stats strong {
@@ -586,17 +598,20 @@ select option {
 }
 
 .level-chip-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(170px, max-content);
   gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .chart-level-chip {
   display: grid;
-  grid-template-columns: auto minmax(120px, 1fr);
+  grid-template-columns: auto minmax(90px, 1fr);
   gap: 4px 8px;
   align-items: center;
-  min-width: 190px;
+  min-width: 170px;
   padding: 10px 12px;
   border-radius: 6px;
   background: rgba(8, 17, 22, 0.72);
@@ -833,10 +848,54 @@ details p {
   }
 
   .detail-grid,
-  .chart-level-chip,
   .pack-title-card,
   .title-qr {
     grid-template-columns: 1fr;
+  }
+
+  .simfile-list {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .simfile-list h2 {
+    font-size: 1.1rem;
+  }
+
+  .simfile-card {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .simfile-card-header {
+    gap: 8px;
+  }
+
+  .simfile-card-header p,
+  .simfile-card-header span {
+    font-size: 0.78rem;
+  }
+
+  .simfile-card-header h3 {
+    font-size: 0.98rem;
+  }
+
+  .simfile-card-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .simfile-card-stats span,
+  .simfile-card-stats strong,
+  .simfile-card-stats button {
+    min-height: 32px;
+    padding: 0 6px;
+    font-size: 0.78rem;
+  }
+
+  .chart-level-chip {
+    min-width: 150px;
+    padding: 8px;
+    font-size: 0.8rem;
   }
 
   .title-qr {
