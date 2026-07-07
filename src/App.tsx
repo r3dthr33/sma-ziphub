@@ -30,7 +30,7 @@ const sections: Array<{ id: Section; label: string }> = [
 function App() {
   const [activeSection, setActiveSection] = useState<Section>("summary");
   const [query, setQuery] = useState("");
-  const [styleFilters, setStyleFilters] = useState<string[]>([]);
+  const [styleFilters, setStyleFilters] = useState<string[]>(() => getAllStyles(songs));
   const [sortMode, setSortMode] = useState<SortMode>("rating");
   const [selectedPackId, setSelectedPackId] = useState(packs[0]?.id ?? "");
   const [viewingPack, setViewingPack] = useState(false);
@@ -46,8 +46,8 @@ function App() {
         const text = `${pack.name} ${songText}`.toLowerCase();
         const matchesQuery = !cleanQuery || text.includes(cleanQuery);
         const matchesStyle =
-          styleFilters.length === 0 ||
-          styleFilters.every((style) => pack.songs.some((song) => song.steps.some((step) => step.style === style)));
+          styleFilters.length > 0 &&
+          pack.songs.some((song) => song.steps.some((step) => styleFilters.includes(step.style)));
         return matchesQuery && matchesStyle;
       })
       .sort((a, b) => sortPacks(a, b, sortMode));
@@ -64,7 +64,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.21</strong>
+            <strong>v0.0.22</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -117,6 +117,7 @@ function App() {
           sortMode={sortMode}
           styleFilters={styleFilters}
           styles={styles}
+          toggleAllStyleFilters={() => setStyleFilters((current) => (current.length === styles.length ? [] : styles))}
           toggleStyleFilter={(style) =>
             setStyleFilters((current) => (current.includes(style) ? current.filter((item) => item !== style) : [...current, style]))
           }
@@ -218,6 +219,7 @@ function Database({
   sortMode,
   styleFilters,
   styles,
+  toggleAllStyleFilters,
   toggleStyleFilter,
   viewingPack,
 }: {
@@ -231,9 +233,12 @@ function Database({
   sortMode: SortMode;
   styleFilters: string[];
   styles: string[];
+  toggleAllStyleFilters: () => void;
   toggleStyleFilter: (style: string) => void;
   viewingPack: boolean;
 }) {
+  const allStylesSelected = styleFilters.length === styles.length;
+
   return (
     <section className="database-layout pack-database page-section">
       <aside className="filter-panel">
@@ -248,8 +253,16 @@ function Database({
         </label>
 
         <div className="filter-group">
-          <span>{styleFilters.length === 0 ? "All styles" : "Contains styles"}</span>
+          <span>Contains styles</span>
           <div className="style-toggle-list" role="group" aria-label="Contains styles">
+            <button
+              aria-pressed={allStylesSelected}
+              className={allStylesSelected ? "active" : ""}
+              onClick={toggleAllStyleFilters}
+              type="button"
+            >
+              All styles
+            </button>
             {styles.map((style) => (
               <button
                 aria-pressed={styleFilters.includes(style)}
@@ -281,7 +294,7 @@ function Database({
         ) : filteredPacks.length === 0 ? (
           <div className="empty-state">
             <strong>No packs found</strong>
-            <span>Try another search or reset the style filter.</span>
+            <span>Select at least one style or try another search.</span>
           </div>
         ) : (
           filteredPacks.map((pack) => (
