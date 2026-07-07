@@ -64,7 +64,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.19</strong>
+            <strong>v0.0.20</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -120,7 +120,6 @@ function App() {
           toggleStyleFilter={(style) =>
             setStyleFilters((current) => (current.includes(style) ? current.filter((item) => item !== style) : [...current, style]))
           }
-          clearStyleFilters={() => setStyleFilters([])}
           viewingPack={viewingPack}
         />
       )}
@@ -220,10 +219,8 @@ function Database({
   styleFilters,
   styles,
   toggleStyleFilter,
-  clearStyleFilters,
   viewingPack,
 }: {
-  clearStyleFilters: () => void;
   filteredPacks: PackEntry[];
   query: string;
   selectedPack: PackEntry;
@@ -251,16 +248,8 @@ function Database({
         </label>
 
         <div className="filter-group">
-          <span>Contains styles</span>
+          <span>{styleFilters.length === 0 ? "All styles" : "Contains styles"}</span>
           <div className="style-toggle-list" role="group" aria-label="Contains styles">
-            <button
-              aria-pressed={styleFilters.length === 0}
-              className={styleFilters.length === 0 ? "active" : ""}
-              onClick={clearStyleFilters}
-              type="button"
-            >
-              All styles
-            </button>
             {styles.map((style) => (
               <button
                 aria-pressed={styleFilters.includes(style)}
