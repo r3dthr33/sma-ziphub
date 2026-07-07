@@ -597,6 +597,69 @@ select option {
   font-size: 1.2rem;
 }
 
+.pack-rating {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(7, 17, 19, 0.48);
+}
+
+.pack-rating > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+.pack-rating span,
+.pack-rating .rating-reset {
+  color: var(--muted);
+}
+
+.pack-rating strong {
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.rating-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 42px);
+  gap: 6px;
+}
+
+.rating-buttons button,
+.rating-reset {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text);
+  font-weight: 850;
+}
+
+.rating-buttons button:hover,
+.rating-buttons button[aria-pressed="true"],
+.rating-reset:hover:not(:disabled) {
+  border-color: var(--line-strong);
+  background: rgba(125, 242, 255, 0.12);
+}
+
+.rating-buttons button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.rating-reset {
+  padding: 0 12px;
+}
+
+.rating-reset:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
 .pack-simfiles {
   display: grid;
   gap: 12px;
@@ -1042,8 +1105,13 @@ details p {
 
   .detail-grid,
   .pack-title-card,
-  .title-qr {
+  .title-qr,
+  .pack-rating {
     grid-template-columns: 1fr;
+  }
+
+  .rating-buttons {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
   .pack-simfiles {

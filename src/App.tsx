@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   formatBytes,
   formatDuration,
@@ -62,7 +62,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.16</strong>
+            <strong>v0.0.17</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -370,6 +370,8 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
         </span>
       </div>
 
+      <PackRating pack={pack} />
+
       <div className="group-strip">
         <h2>Groups included</h2>
         <div>
@@ -410,6 +412,53 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
         </div>
       </section>
     </div>
+  );
+}
+
+function PackRating({ pack }: { pack: PackEntry }) {
+  const storageKey = `smamx-pack-rating:${pack.id}`;
+  const catalogRating = seededScore(pack.id, 35, 50) / 10;
+  const [userRating, setUserRating] = useState<number | null>(null);
+
+  useEffect(() => {
+    const storedRating = window.localStorage.getItem(storageKey);
+    setUserRating(storedRating ? Number(storedRating) : null);
+  }, [storageKey]);
+
+  function saveRating(value: number) {
+    window.localStorage.setItem(storageKey, String(value));
+    setUserRating(value);
+  }
+
+  function clearRating() {
+    window.localStorage.removeItem(storageKey);
+    setUserRating(null);
+  }
+
+  return (
+    <section className="pack-rating" aria-label={`Rating for ${pack.name}`}>
+      <div>
+        <span>Pack rating</span>
+        <strong>{userRating ? `${userRating.toFixed(1)} / 5` : `${catalogRating.toFixed(1)} catalog score`}</strong>
+      </div>
+
+      <div className="rating-buttons" aria-label="Set your pack rating">
+        {[1, 2, 3, 4, 5].map((rating) => (
+          <button
+            aria-pressed={userRating === rating}
+            key={rating}
+            onClick={() => saveRating(rating)}
+            type="button"
+          >
+            {rating}
+          </button>
+        ))}
+      </div>
+
+      <button className="rating-reset" disabled={!userRating} onClick={clearRating} type="button">
+        Clear
+      </button>
+    </section>
   );
 }
 
