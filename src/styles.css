@@ -347,6 +347,10 @@ h2 {
   align-items: start;
 }
 
+.pack-database {
+  grid-template-columns: 250px minmax(360px, 0.9fr) minmax(420px, 1.2fr);
+}
+
 .filter-panel {
   position: sticky;
   top: 104px;
@@ -434,6 +438,18 @@ select option {
   font-style: normal;
 }
 
+.pack-strip {
+  grid-template-columns: 82px minmax(0, 1fr);
+}
+
+.pack-strip em {
+  grid-column: 2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .level-chip {
   display: grid;
   min-height: 48px;
@@ -496,6 +512,66 @@ select option {
   display: grid;
   gap: 8px;
   padding: 14px;
+}
+
+.simfile-list {
+  display: grid;
+  gap: 10px;
+  max-height: 430px;
+  overflow: auto;
+  padding: 16px;
+}
+
+.simfile-list h2 {
+  margin: 0 0 4px;
+  font-size: 1.35rem;
+}
+
+.simfile-row {
+  overflow: hidden;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.simfile-row summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 70px;
+  padding: 12px;
+  list-style: none;
+}
+
+.simfile-row summary::-webkit-details-marker {
+  display: none;
+}
+
+.simfile-row summary span,
+.simfile-row summary strong,
+.simfile-row summary small {
+  display: block;
+}
+
+.simfile-row summary strong {
+  overflow-wrap: anywhere;
+  line-height: 1.15;
+}
+
+.simfile-row summary small,
+.simfile-row summary em {
+  color: #99b8c4;
+  font-style: normal;
+}
+
+.simfile-row summary b {
+  display: grid;
+  min-width: 54px;
+  min-height: 38px;
+  place-items: center;
+  border-radius: 6px;
+  background: rgba(125, 242, 255, 0.15);
+  color: #7df2ff;
 }
 
 .step-item {
@@ -664,6 +740,7 @@ details p {
   .hero-band,
   .metric-row,
   .song-strip,
+  .simfile-row summary,
   .qr-panel {
     grid-template-columns: 1fr;
   }

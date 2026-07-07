@@ -5,9 +5,17 @@ import {
   formatDuration,
   getAllStyles,
   getLevelRange,
+  getPackAudioSize,
+  getPackChartCount,
+  getPackDuration,
+  getPackLevelRange,
+  getPackStyles,
   getTopChart,
+  getTopPackChart,
+  packs,
   seededScore,
   songs,
+  type PackEntry,
 } from "./data";
 import type { SongRecord } from "./types";
 
@@ -25,21 +33,22 @@ function App() {
   const [query, setQuery] = useState("");
   const [styleFilter, setStyleFilter] = useState("all");
   const [sortMode, setSortMode] = useState<SortMode>("rating");
-  const [selectedId, setSelectedId] = useState(songs[0]?.id ?? "");
+  const [selectedPackId, setSelectedPackId] = useState(packs[0]?.id ?? "");
 
   const styles = useMemo(() => getAllStyles(songs), []);
-  const selectedSong = songs.find((song) => song.id === selectedId) ?? songs[0];
+  const selectedPack = packs.find((pack) => pack.id === selectedPackId) ?? packs[0];
 
-  const filteredSongs = useMemo(() => {
+  const filteredPacks = useMemo(() => {
     const cleanQuery = query.trim().toLowerCase();
-    return songs
-      .filter((song) => {
-        const text = `${song.title} ${song.artist} ${song.folderName} ${song.metadata.credit}`.toLowerCase();
+    return packs
+      .filter((pack) => {
+        const songText = pack.songs.map((song) => `${song.title} ${song.artist} ${song.folderName}`).join(" ");
+        const text = `${pack.name} ${songText}`.toLowerCase();
         const matchesQuery = !cleanQuery || text.includes(cleanQuery);
-        const matchesStyle = styleFilter === "all" || song.steps.some((step) => step.style === styleFilter);
+        const matchesStyle = styleFilter === "all" || pack.songs.some((song) => song.steps.some((step) => step.style === styleFilter));
         return matchesQuery && matchesStyle;
       })
-      .sort((a, b) => sortSongs(a, b, sortMode));
+      .sort((a, b) => sortPacks(a, b, sortMode));
   }, [query, sortMode, styleFilter]);
 
   const stats = useMemo(() => buildStats(songs), []);
@@ -72,12 +81,12 @@ function App() {
       <section className="hero-band">
         <div>
           <p className="eyebrow">StepMania AMX static catalog</p>
-          <h1>Browse simfiles like a song select screen.</h1>
+          <h1>Download packs, inspect the songs inside.</h1>
         </div>
         <div className="hero-console" aria-label="Pack scan status">
+          <span>{packs.length} pack</span>
           <span>{stats.songCount} songs</span>
           <span>{stats.chartCount} charts</span>
-          <span>{stats.totalMinutes} min audio</span>
         </div>
       </section>
 
@@ -85,11 +94,11 @@ function App() {
 
       {activeSection === "database" && (
         <Database
-          filteredSongs={filteredSongs}
+          filteredPacks={filteredPacks}
           query={query}
-          selectedSong={selectedSong}
+          selectedPack={selectedPack}
           setQuery={setQuery}
-          setSelectedId={setSelectedId}
+          setSelectedPackId={setSelectedPackId}
           setSortMode={setSortMode}
           setStyleFilter={setStyleFilter}
           sortMode={sortMode}
@@ -110,15 +119,15 @@ function Summary({ stats, onOpenDatabase }: { stats: ReturnType<typeof buildStat
         <div className="pulse-ring" />
         <p>Pack telemetry</p>
         <strong>{stats.packName}</strong>
-        <span>Generated from local simfile metadata and ready for GitHub Pages.</span>
+        <span>One SMZIP entry, multiple simfiles inside, one QR for the whole download.</span>
       </div>
 
       <div className="metrics-ladder">
         {[
-          ["Most downloaded", stats.mostDownloaded.title, `${stats.mostDownloaded.downloads.toLocaleString()} downloads`],
-          ["Best rated", stats.bestRated.title, `${stats.bestRated.rating.toFixed(1)} player score`],
-          ["Hardest chart", stats.hardest.title, `Level ${stats.hardest.level}`],
-          ["Longest track", stats.longest.title, formatDuration(stats.longest.duration)],
+          ["Most downloaded pack", stats.mostDownloaded.title, `${stats.mostDownloaded.downloads.toLocaleString()} downloads`],
+          ["Best rated pack", stats.bestRated.title, `${stats.bestRated.rating.toFixed(1)} player score`],
+          ["Hardest simfile", stats.hardest.title, `Level ${stats.hardest.level}`],
+          ["Total audio", stats.totalAudio.title, formatDuration(stats.totalAudio.duration)],
         ].map(([label, title, value]) => (
           <article className="metric-row" key={label}>
             <span>{label}</span>
@@ -142,7 +151,7 @@ function Summary({ stats, onOpenDatabase }: { stats: ReturnType<typeof buildStat
           ))}
         </div>
         <button className="primary-action" onClick={onOpenDatabase} type="button">
-          Open Database
+          Open Pack Database
         </button>
       </div>
     </section>
@@ -150,22 +159,22 @@ function Summary({ stats, onOpenDatabase }: { stats: ReturnType<typeof buildStat
 }
 
 function Database({
-  filteredSongs,
+  filteredPacks,
   query,
-  selectedSong,
+  selectedPack,
   setQuery,
-  setSelectedId,
+  setSelectedPackId,
   setSortMode,
   setStyleFilter,
   sortMode,
   styleFilter,
   styles,
 }: {
-  filteredSongs: SongRecord[];
+  filteredPacks: PackEntry[];
   query: string;
-  selectedSong: SongRecord;
+  selectedPack: PackEntry;
   setQuery: (value: string) => void;
-  setSelectedId: (value: string) => void;
+  setSelectedPackId: (value: string) => void;
   setSortMode: (value: SortMode) => void;
   setStyleFilter: (value: string) => void;
   sortMode: SortMode;
@@ -173,20 +182,20 @@ function Database({
   styles: string[];
 }) {
   return (
-    <section className="database-layout page-section">
+    <section className="database-layout pack-database page-section">
       <aside className="filter-panel">
         <label>
-          Search
+          Search packs
           <input
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Title, artist, credit"
+            placeholder="Pack, song, artist"
             type="search"
             value={query}
           />
         </label>
 
         <label>
-          Step style
+          Contains style
           <select onChange={(event) => setStyleFilter(event.target.value)} value={styleFilter}>
             <option value="all">All styles</option>
             {styles.map((style) => (
@@ -198,95 +207,102 @@ function Database({
         </label>
 
         <label>
-          Sort
+          Sort packs
           <select onChange={(event) => setSortMode(event.target.value as SortMode)} value={sortMode}>
             <option value="rating">Best rated</option>
             <option value="downloads">Most downloads</option>
             <option value="level">Highest level</option>
-            <option value="title">Title</option>
+            <option value="title">Pack name</option>
           </select>
         </label>
       </aside>
 
-      <div className="song-wheel" aria-live="polite">
-        {filteredSongs.length === 0 ? (
+      <div className="song-wheel pack-wheel" aria-live="polite">
+        {filteredPacks.length === 0 ? (
           <div className="empty-state">
-            <strong>No simfiles found</strong>
+            <strong>No packs found</strong>
             <span>Try another search or reset the style filter.</span>
           </div>
         ) : (
-          filteredSongs.map((song) => (
+          filteredPacks.map((pack) => (
             <button
-              className={song.id === selectedSong.id ? "song-strip selected" : "song-strip"}
-              key={song.id}
-              onClick={() => setSelectedId(song.id)}
+              className={pack.id === selectedPack.id ? "song-strip pack-strip selected" : "song-strip pack-strip"}
+              key={pack.id}
+              onClick={() => setSelectedPackId(pack.id)}
               type="button"
             >
-              <span className="level-chip">{getLevelRange(song)}</span>
+              <span className="level-chip">{getPackLevelRange(pack)}</span>
               <span>
-                <strong>{song.title}</strong>
-                <small>{song.artist}</small>
+                <strong>{pack.name}</strong>
+                <small>
+                  {pack.songs.length} simfiles, {getPackChartCount(pack)} charts
+                </small>
               </span>
-              <em>{song.bpm?.display ?? "BPM ?"}</em>
+              <em>{getPackStyles(pack).join(", ")}</em>
             </button>
           ))
         )}
       </div>
 
-      <SongDetails song={selectedSong} />
+      <PackDetails pack={selectedPack} />
     </section>
   );
 }
 
-function SongDetails({ song }: { song: SongRecord }) {
-  const topChart = getTopChart(song);
-  const payload = `smamx://install?pack=${encodeURIComponent(catalog.pack.name)}&song=${encodeURIComponent(song.id)}`;
+function PackDetails({ pack }: { pack: PackEntry }) {
+  const topChart = getTopPackChart(pack);
+  const payload = `smamx://install-pack?pack=${encodeURIComponent(pack.id)}&url=${encodeURIComponent(`https://r3dthr33.github.io/sma-ziphub/packs/${pack.id}.smzip`)}`;
 
   return (
-    <aside className="song-detail">
+    <aside className="song-detail pack-detail">
       <div className="song-banner">
-        <span>{song.metadata.credit || catalog.pack.name}</span>
-        <strong>{song.title}</strong>
-        <small>{song.artist}</small>
+        <span>SMZIP pack</span>
+        <strong>{pack.name}</strong>
+        <small>{pack.songs.length} simfiles included</small>
       </div>
 
       <div className="detail-grid">
         <span>
-          Duration
-          <strong>{formatDuration(song.audio?.durationSeconds)}</strong>
+          Simfiles
+          <strong>{pack.songs.length}</strong>
         </span>
         <span>
-          Audio
-          <strong>{formatBytes(song.audio?.sizeBytes)}</strong>
+          Charts
+          <strong>{getPackChartCount(pack)}</strong>
         </span>
         <span>
-          BPM
-          <strong>{song.bpm?.display ?? "Unknown"}</strong>
+          Audio total
+          <strong>{formatDuration(getPackDuration(pack))}</strong>
         </span>
         <span>
-          Peak
+          Audio size
+          <strong>{formatBytes(getPackAudioSize(pack))}</strong>
+        </span>
+        <span>
+          Level range
+          <strong>{getPackLevelRange(pack)}</strong>
+        </span>
+        <span>
+          Peak chart
           <strong>{topChart ? `Lv ${topChart.level}` : "Unknown"}</strong>
         </span>
       </div>
 
-      <div className="step-list">
-        {song.steps.map((step) => (
-          <div className="step-item" key={`${step.sourceFile}-${step.description}-${step.levelRaw}`}>
-            <span>{step.style}</span>
-            <strong>{step.description || step.difficulty}</strong>
-            <em>Lv {step.levelRaw || "?"}</em>
-          </div>
+      <div className="simfile-list">
+        <h2>Simfiles inside</h2>
+        {pack.songs.map((song) => (
+          <SimfileRow key={song.id} song={song} />
         ))}
       </div>
 
       <div className="qr-panel">
-        <div className="qr-mock" aria-label="Prototype QR code visual">
+        <div className="qr-mock" aria-label="Prototype pack QR code visual">
           {Array.from({ length: 49 }, (_, index) => (
-            <i className={(index * song.id.length + index) % 5 < 2 ? "on" : ""} key={index} />
+            <i className={(index * pack.id.length + index) % 5 < 2 ? "on" : ""} key={index} />
           ))}
         </div>
         <div>
-          <strong>QR payload</strong>
+          <strong>One QR for the whole pack</strong>
           <code>{payload}</code>
         </div>
       </div>
@@ -294,23 +310,53 @@ function SongDetails({ song }: { song: SongRecord }) {
   );
 }
 
+function SimfileRow({ song }: { song: SongRecord }) {
+  const topChart = getTopChart(song);
+
+  return (
+    <details className="simfile-row">
+      <summary>
+        <span>
+          <strong>{song.title}</strong>
+          <small>{song.artist}</small>
+        </span>
+        <em>{song.bpm?.display ?? "BPM ?"}</em>
+        <b>{topChart ? `Lv ${topChart.level}` : getLevelRange(song)}</b>
+      </summary>
+      <div className="step-list">
+        {song.steps.map((step) => (
+          <div className="step-item" key={`${song.id}-${step.sourceFile}-${step.description}-${step.levelRaw}`}>
+            <span>{step.style}</span>
+            <strong>{step.description || step.difficulty}</strong>
+            <em>Lv {step.levelRaw || "?"}</em>
+          </div>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 function Faq() {
   const items = [
+    [
+      "What is a database entry?",
+      "Each entry is an SMZIP pack or main folder. Clicking it shows the simfiles inside, but the download target stays pack-level.",
+    ],
     [
       "Will this work on GitHub Pages?",
       "Yes. The app is static and reads a generated JSON database, so it can be built and published as plain files.",
     ],
     [
       "Where do the SMZIP files live?",
-      "The catalog can point to GitHub Releases, Pages assets, or any public file host. The current prototype focuses on metadata.",
+      "The catalog can point to GitHub Releases, Pages assets, or any public file host. The QR should point to the complete pack download.",
     ],
     [
       "Is the QR code final?",
-      "Not yet. The prototype shows a versioned install payload shape. We should match the exact StepMania AMX scanner format once it is finalized.",
+      "Not yet. The prototype shows a pack install payload shape. We should match the exact StepMania AMX scanner format once it is finalized.",
     ],
     [
       "Can it parse more packs?",
-      "Yes. The generator can be expanded to scan multiple pack folders and output one combined database.",
+      "Yes. The generator can be expanded to scan multiple main folders and output one entry per SMZIP pack.",
     ],
   ];
 
@@ -332,9 +378,9 @@ function Faq() {
   );
 }
 
-function sortSongs(a: SongRecord, b: SongRecord, mode: SortMode): number {
-  if (mode === "title") return a.title.localeCompare(b.title);
-  if (mode === "level") return (getTopChart(b)?.level ?? 0) - (getTopChart(a)?.level ?? 0);
+function sortPacks(a: PackEntry, b: PackEntry, mode: SortMode): number {
+  if (mode === "title") return a.name.localeCompare(b.name);
+  if (mode === "level") return (getTopPackChart(b)?.level ?? 0) - (getTopPackChart(a)?.level ?? 0);
   if (mode === "downloads") return seededScore(b.id, 800, 9200) - seededScore(a.id, 800, 9200);
   return seededScore(b.id, 35, 50) - seededScore(a.id, 35, 50);
 }
@@ -357,32 +403,24 @@ function buildStats(records: SongRecord[]) {
     { title: "Unknown", level: 0 },
   );
 
-  const longest = records.reduce(
-    (winner, song) =>
-      (song.audio?.durationSeconds ?? 0) > winner.duration
-        ? { title: song.title, duration: song.audio?.durationSeconds ?? 0 }
-        : winner,
-    { title: "Unknown", duration: 0 },
-  );
-
-  const mostDownloadedSong = [...records].sort((a, b) => seededScore(b.id, 800, 9200) - seededScore(a.id, 800, 9200))[0];
-  const bestRatedSong = [...records].sort((a, b) => seededScore(b.id, 35, 50) - seededScore(a.id, 35, 50))[0];
-
   return {
     packName: catalog.pack.name,
     songCount: records.length,
     chartCount,
     totalMinutes: Math.round(totalSeconds / 60),
     mostDownloaded: {
-      title: mostDownloadedSong.title,
-      downloads: seededScore(mostDownloadedSong.id, 800, 9200),
+      title: catalog.pack.name,
+      downloads: seededScore(catalog.pack.name, 800, 9200),
     },
     bestRated: {
-      title: bestRatedSong.title,
-      rating: seededScore(bestRatedSong.id, 35, 50) / 10,
+      title: catalog.pack.name,
+      rating: seededScore(catalog.pack.name, 35, 50) / 10,
     },
     hardest,
-    longest,
+    totalAudio: {
+      title: catalog.pack.name,
+      duration: totalSeconds,
+    },
     levelBuckets,
   };
 }
