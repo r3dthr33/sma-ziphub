@@ -33,6 +33,7 @@ function App() {
   const [styleFilter, setStyleFilter] = useState("all");
   const [sortMode, setSortMode] = useState<SortMode>("rating");
   const [selectedPackId, setSelectedPackId] = useState(packs[0]?.id ?? "");
+  const [viewingPack, setViewingPack] = useState(false);
 
   const styles = useMemo(() => getAllStyles(songs), []);
   const selectedPack = packs.find((pack) => pack.id === selectedPackId) ?? packs[0];
@@ -61,7 +62,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.9</strong>
+            <strong>v0.0.10</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -91,7 +92,20 @@ function App() {
         </div>
       </section>
 
-      {activeSection === "summary" && <Summary stats={stats} onOpenDatabase={() => setActiveSection("database")} />}
+      {activeSection === "summary" && (
+        <Summary
+          stats={stats}
+          onOpenDatabase={() => {
+            setViewingPack(false);
+            setActiveSection("database");
+          }}
+          onOpenPack={(packId) => {
+            setSelectedPackId(packId);
+            setViewingPack(true);
+            setActiveSection("database");
+          }}
+        />
+      )}
 
       {activeSection === "database" && (
         <Database
@@ -100,11 +114,13 @@ function App() {
           selectedPack={selectedPack}
           setQuery={setQuery}
           setSelectedPackId={setSelectedPackId}
+          setViewingPack={setViewingPack}
           setSortMode={setSortMode}
           setStyleFilter={setStyleFilter}
           sortMode={sortMode}
           styleFilter={styleFilter}
           styles={styles}
+          viewingPack={viewingPack}
         />
       )}
 
@@ -113,37 +129,81 @@ function App() {
   );
 }
 
-function Summary({ stats, onOpenDatabase }: { stats: ReturnType<typeof buildStats>; onOpenDatabase: () => void }) {
+function Summary({
+  stats,
+  onOpenDatabase,
+  onOpenPack,
+}: {
+  stats: ReturnType<typeof buildStats>;
+  onOpenDatabase: () => void;
+  onOpenPack: (packId: string) => void;
+}) {
+  const highlights = [
+    {
+      label: "Most downloaded pack",
+      pack: stats.mostDownloaded.pack,
+      value: `${stats.mostDownloaded.downloads.toLocaleString()} downloads`,
+    },
+    {
+      label: "Best rated pack",
+      pack: stats.bestRated.pack,
+      value: `${stats.bestRated.rating.toFixed(1)} player score`,
+    },
+    {
+      label: "Hardest chart pack",
+      pack: stats.hardest.pack,
+      value: `Level ${stats.hardest.level}`,
+    },
+    {
+      label: "Longest audio pack",
+      pack: stats.longestAudio.pack,
+      value: formatDuration(stats.longestAudio.duration),
+    },
+  ];
+
   return (
     <section className="summary-grid page-section">
       <div className="metrics-ladder">
-        {[
-          ["Most downloaded pack", stats.mostDownloaded.title, `${stats.mostDownloaded.downloads.toLocaleString()} downloads`],
-          ["Best rated pack", stats.bestRated.title, `${stats.bestRated.rating.toFixed(1)} player score`],
-          ["Hardest simfile", stats.hardest.title, `Level ${stats.hardest.level}`],
-          ["Total audio", stats.totalAudio.title, formatDuration(stats.totalAudio.duration)],
-        ].map(([label, title, value]) => (
-          <article className="metric-row" key={label}>
-            <span>{label}</span>
-            <strong>{title}</strong>
-            <em>{value}</em>
-          </article>
+        {highlights.map((highlight) => (
+          <button className="metric-row" key={highlight.label} onClick={() => onOpenPack(highlight.pack.id)} type="button">
+            <span>{highlight.label}</span>
+            <strong>{highlight.pack.name}</strong>
+            <em>{highlight.value}</em>
+          </button>
         ))}
       </div>
 
       <div className="chart-stack">
-        <h2>Difficulty spectrum</h2>
-        <div className="level-bars">
-          {stats.levelBuckets.map((bucket) => (
-            <div className="level-row" key={bucket.label}>
-              <span>{bucket.label}</span>
-              <div>
-                <i style={{ width: `${bucket.percent}%` }} />
+        <div className="spectrum-block">
+          <h2>Difficulty spectrum</h2>
+          <div className="level-bars">
+            {stats.levelBuckets.map((bucket) => (
+              <div className="level-row" key={bucket.label}>
+                <span>{bucket.label}</span>
+                <div>
+                  <i style={{ width: `${bucket.percent}%` }} />
+                </div>
+                <strong>{bucket.count}</strong>
               </div>
-              <strong>{bucket.count}</strong>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
+        <div className="spectrum-block">
+          <h2>Style spectrum</h2>
+          <div className="level-bars">
+            {stats.styleBuckets.map((bucket) => (
+              <div className="level-row style-row" key={bucket.label}>
+                <span>{bucket.label}</span>
+                <div>
+                  <i style={{ width: `${bucket.percent}%` }} />
+                </div>
+                <strong>{bucket.count}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <button className="primary-action" onClick={onOpenDatabase} type="button">
           Open Pack Database
         </button>
@@ -158,25 +218,27 @@ function Database({
   selectedPack,
   setQuery,
   setSelectedPackId,
+  setViewingPack,
   setSortMode,
   setStyleFilter,
   sortMode,
   styleFilter,
   styles,
+  viewingPack,
 }: {
   filteredPacks: PackEntry[];
   query: string;
   selectedPack: PackEntry;
   setQuery: (value: string) => void;
   setSelectedPackId: (value: string) => void;
+  setViewingPack: (value: boolean) => void;
   setSortMode: (value: SortMode) => void;
   setStyleFilter: (value: string) => void;
   sortMode: SortMode;
   styleFilter: string;
   styles: string[];
+  viewingPack: boolean;
 }) {
-  const [viewingPack, setViewingPack] = useState(false);
-
   return (
     <section className="database-layout pack-database page-section">
       <aside className="filter-panel">
@@ -484,23 +546,50 @@ function buildPackCounters(records: PackEntry[]) {
 }
 
 function buildStats(records: SongRecord[]) {
-  const allCharts = records.flatMap((song) => song.steps.map((step) => ({ song, step })));
+  const allCharts = packs.flatMap((pack) => pack.songs.flatMap((song) => song.steps.map((step) => ({ pack, song, step }))));
   const totalSeconds = records.reduce((sum, song) => sum + (song.audio?.durationSeconds ?? 0), 0);
   const chartCount = allCharts.length;
-  const topDownloadedPack = [...packs].sort((a, b) => seededScore(b.id, 800, 9200) - seededScore(a.id, 800, 9200))[0];
-  const topRatedPack = [...packs].sort((a, b) => seededScore(b.id, 35, 50) - seededScore(a.id, 35, 50))[0];
-  const levelBuckets = [
-    { label: "Lv 1-9", count: allCharts.filter(({ step }) => (step.level ?? 0) <= 9).length },
-    { label: "Lv 10-17", count: allCharts.filter(({ step }) => (step.level ?? 0) >= 10 && (step.level ?? 0) <= 17).length },
-    { label: "Lv 18+", count: allCharts.filter(({ step }) => (step.level ?? 0) >= 18).length },
-  ].map((bucket) => ({
-    ...bucket,
-    percent: chartCount ? Math.max(8, Math.round((bucket.count / chartCount) * 100)) : 0,
-  }));
+  const fallbackPack: PackEntry = packs[0] ?? {
+    id: "unknown-pack",
+    name: "Unknown pack",
+    sourcePath: "",
+    songCount: 0,
+    songs: [],
+  };
+  const topDownloadedPack = [...packs].sort((a, b) => seededScore(b.id, 800, 9200) - seededScore(a.id, 800, 9200))[0] ?? fallbackPack;
+  const topRatedPack = [...packs].sort((a, b) => seededScore(b.id, 35, 50) - seededScore(a.id, 35, 50))[0] ?? fallbackPack;
+  const longestAudioPack = [...packs].sort((a, b) => getPackDuration(b) - getPackDuration(a))[0] ?? fallbackPack;
+  const levelCounts = new Map<number, number>();
+  const styleCounts = new Map<string, number>();
+
+  allCharts.forEach(({ step }) => {
+    if (typeof step.level === "number") {
+      levelCounts.set(step.level, (levelCounts.get(step.level) ?? 0) + 1);
+    }
+    styleCounts.set(step.style, (styleCounts.get(step.style) ?? 0) + 1);
+  });
+
+  const maxLevelCount = Math.max(1, ...levelCounts.values());
+  const maxStyleCount = Math.max(1, ...styleCounts.values());
+  const levelBuckets = Array.from(levelCounts.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([level, count]) => ({
+      label: `Lv ${level}`,
+      count,
+      percent: Math.max(6, Math.round((count / maxLevelCount) * 100)),
+    }));
+
+  const styleBuckets = Array.from(styleCounts.entries())
+    .sort(([, a], [, b]) => b - a)
+    .map(([style, count]) => ({
+      label: style,
+      count,
+      percent: Math.max(6, Math.round((count / maxStyleCount) * 100)),
+    }));
 
   const hardest = allCharts.reduce(
-    (winner, item) => ((item.step.level ?? 0) > winner.level ? { title: item.song.title, level: item.step.level ?? 0 } : winner),
-    { title: "Unknown", level: 0 },
+    (winner, item) => ((item.step.level ?? 0) > winner.level ? { pack: item.pack, level: item.step.level ?? 0 } : winner),
+    { pack: fallbackPack, level: 0 },
   );
 
   return {
@@ -509,19 +598,20 @@ function buildStats(records: SongRecord[]) {
     chartCount,
     totalMinutes: Math.round(totalSeconds / 60),
     mostDownloaded: {
-      title: topDownloadedPack.name,
+      pack: topDownloadedPack,
       downloads: seededScore(topDownloadedPack.id, 800, 9200),
     },
     bestRated: {
-      title: topRatedPack.name,
+      pack: topRatedPack,
       rating: seededScore(topRatedPack.id, 35, 50) / 10,
     },
     hardest,
-    totalAudio: {
-      title: `${packs.length} packs`,
-      duration: totalSeconds,
+    longestAudio: {
+      pack: longestAudioPack,
+      duration: getPackDuration(longestAudioPack),
     },
     levelBuckets,
+    styleBuckets,
   };
 }
 

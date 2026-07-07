@@ -227,10 +227,30 @@ h2 {
   grid-template-columns: 150px 1fr auto;
   gap: 14px;
   align-items: center;
+  width: 100%;
   min-height: 92px;
   padding: 16px;
+  border: 1px solid transparent;
   border-radius: 6px;
   background: linear-gradient(90deg, rgba(125, 242, 255, 0.1), rgba(255, 54, 125, 0.05));
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.metric-row:hover,
+.metric-row:focus-visible {
+  border-color: rgba(125, 242, 255, 0.44);
+  background: linear-gradient(90deg, rgba(125, 242, 255, 0.18), rgba(255, 54, 125, 0.08));
+}
+
+.metric-row:focus-visible {
+  outline: 3px solid rgba(125, 242, 255, 0.18);
+  outline-offset: 2px;
 }
 
 .metric-row span,
@@ -247,21 +267,42 @@ h2 {
 .chart-stack {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
   padding: 24px;
+}
+
+.spectrum-block {
+  display: grid;
+  gap: 12px;
+}
+
+.spectrum-block h2 {
+  margin: 0;
+  font-size: 1.2rem;
 }
 
 .level-bars {
   display: grid;
-  gap: 18px;
+  gap: 10px;
 }
 
 .level-row {
   display: grid;
-  grid-template-columns: 74px 1fr 32px;
+  grid-template-columns: 74px 1fr 44px;
   gap: 10px;
   align-items: center;
   color: #b9d0d9;
+  font-size: 0.9rem;
+}
+
+.style-row {
+  grid-template-columns: minmax(128px, 0.8fr) minmax(90px, 1fr) 44px;
+}
+
+.level-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .level-row div {
