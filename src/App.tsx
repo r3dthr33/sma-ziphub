@@ -80,11 +80,11 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.29</strong>
+            <strong>v0.0.30</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
-            <small>{packs.length} pack database</small>
+            <small>{getOnlineUsers()} users online</small>
           </span>
         </button>
 
@@ -541,6 +541,10 @@ function getRatingStars(score: number) {
 
 function getPackDownloads(pack: PackEntry) {
   return seededScore(pack.id, 800, 9200);
+}
+
+function getOnlineUsers() {
+  return seededScore("smamx-online-users", 18, 96);
 }
 
 function getAvailableArtists(records: SongRecord[]) {
