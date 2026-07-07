@@ -420,7 +420,7 @@ select option {
   overflow: auto;
   padding: 10px;
   scrollbar-width: none;
-  mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 18px), transparent 100%);
 }
 
 .song-wheel::-webkit-scrollbar,
@@ -478,6 +478,7 @@ select option {
 
 .pack-strip {
   grid-template-columns: 82px minmax(0, 1fr);
+  align-items: center;
 }
 
 .pack-strip em {
@@ -490,6 +491,8 @@ select option {
 
 .level-chip {
   display: grid;
+  grid-row: 1 / span 2;
+  align-self: center;
   min-height: 42px;
   place-items: center;
   border-radius: 6px;
