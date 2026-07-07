@@ -391,19 +391,28 @@ label {
   min-height: 34px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.045);
-  color: var(--muted-strong);
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted);
   padding: 0 10px;
   font: inherit;
   font-size: 0.82rem;
   font-weight: 850;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    color 150ms ease;
 }
 
-.style-toggle-list button:hover,
+.style-toggle-list button:not(.active):hover {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.065);
+  color: var(--muted-strong);
+}
+
 .style-toggle-list button.active {
   border-color: var(--accent);
-  background: rgba(125, 242, 255, 0.16);
-  color: var(--text);
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
 input,
