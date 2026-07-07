@@ -38,6 +38,8 @@ function App() {
   const [viewingPack, setViewingPack] = useState(false);
 
   const styles = useMemo(() => getAllStyles(songs), []);
+  const artistOptions = useMemo(() => getAvailableArtists(songs), []);
+  const stepmakerOptions = useMemo(() => getAvailableStepmakers(songs), []);
   const selectedPack = packs.find((pack) => pack.id === selectedPackId) ?? packs[0];
 
   const filteredPacks = useMemo(() => {
@@ -78,7 +80,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.27</strong>
+            <strong>v0.0.28</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -122,6 +124,7 @@ function App() {
       {activeSection === "database" && (
         <Database
           artistFilter={artistFilter}
+          artistOptions={artistOptions}
           filteredPacks={filteredPacks}
           query={query}
           selectedPack={selectedPack}
@@ -133,6 +136,7 @@ function App() {
           setSortMode={setSortMode}
           sortMode={sortMode}
           stepmakerFilter={stepmakerFilter}
+          stepmakerOptions={stepmakerOptions}
           styleFilters={styleFilters}
           styles={styles}
           toggleAllStyleFilters={() => setStyleFilters((current) => (current.length === styles.length ? [] : styles))}
@@ -167,9 +171,14 @@ function Summary({
       value: `${stats.bestRated.rating.toFixed(1)} player score`,
     },
     {
-      label: "Hardest chart pack",
-      pack: stats.hardest.pack,
-      value: `Level ${stats.hardest.level}`,
+      label: "Most charts pack",
+      pack: stats.mostCharts.pack,
+      value: `${stats.mostCharts.charts.toLocaleString()} charts`,
+    },
+    {
+      label: "Most simfiles pack",
+      pack: stats.mostSimfiles.pack,
+      value: `${stats.mostSimfiles.simfiles.toLocaleString()} simfiles`,
     },
     {
       label: "Longest audio pack",
@@ -245,6 +254,7 @@ function Summary({
 
 function Database({
   artistFilter,
+  artistOptions,
   filteredPacks,
   query,
   selectedPack,
@@ -256,6 +266,7 @@ function Database({
   setSortMode,
   sortMode,
   stepmakerFilter,
+  stepmakerOptions,
   styleFilters,
   styles,
   toggleAllStyleFilters,
@@ -263,6 +274,7 @@ function Database({
   viewingPack,
 }: {
   artistFilter: string;
+  artistOptions: string[];
   filteredPacks: PackEntry[];
   query: string;
   selectedPack: PackEntry;
@@ -274,6 +286,7 @@ function Database({
   setSortMode: (value: SortMode) => void;
   sortMode: SortMode;
   stepmakerFilter: string;
+  stepmakerOptions: string[];
   styleFilters: string[];
   styles: string[];
   toggleAllStyleFilters: () => void;
@@ -297,22 +310,32 @@ function Database({
 
         <label>
           Artist
-          <input
+          <select
             onChange={(event) => setArtistFilter(event.target.value)}
-            placeholder="Artist name"
-            type="search"
             value={artistFilter}
-          />
+          >
+            <option value="">All artists</option>
+            {artistOptions.map((artist) => (
+              <option key={artist} value={artist}>
+                {artist}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label>
           StepMaker
-          <input
+          <select
             onChange={(event) => setStepmakerFilter(event.target.value)}
-            placeholder="StepMaker credit"
-            type="search"
             value={stepmakerFilter}
-          />
+          >
+            <option value="">All StepMakers</option>
+            {stepmakerOptions.map((stepmaker) => (
+              <option key={stepmaker} value={stepmaker}>
+                {stepmaker}
+              </option>
+            ))}
+          </select>
         </label>
 
         <div className="filter-group">
@@ -505,6 +528,18 @@ function getRatingStars(score: number) {
 
 function getPackDownloads(pack: PackEntry) {
   return seededScore(pack.id, 800, 9200);
+}
+
+function getAvailableArtists(records: SongRecord[]) {
+  return Array.from(new Set(records.map((song) => song.metadata.artistTranslit || song.artist).filter(Boolean))).sort((a, b) =>
+    a.localeCompare(b),
+  );
+}
+
+function getAvailableStepmakers(records: SongRecord[]) {
+  return Array.from(new Set(records.flatMap((song) => song.steps.map((step) => step.stepmaker)).filter(Boolean))).sort((a, b) =>
+    a.localeCompare(b),
+  );
 }
 
 function PackRating({ pack }: { pack: PackEntry }) {
@@ -703,12 +738,15 @@ function buildStats(records: SongRecord[]) {
   const fallbackPack: PackEntry = packs[0] ?? {
     id: "unknown-pack",
     name: "Unknown pack",
+    author: "Unknown author",
     sourcePath: "",
     songCount: 0,
     songs: [],
   };
   const topDownloadedPack = [...packs].sort((a, b) => seededScore(b.id, 800, 9200) - seededScore(a.id, 800, 9200))[0] ?? fallbackPack;
   const topRatedPack = [...packs].sort((a, b) => seededScore(b.id, 35, 50) - seededScore(a.id, 35, 50))[0] ?? fallbackPack;
+  const mostChartsPack = [...packs].sort((a, b) => getPackChartCount(b) - getPackChartCount(a))[0] ?? fallbackPack;
+  const mostSimfilesPack = [...packs].sort((a, b) => b.songs.length - a.songs.length)[0] ?? fallbackPack;
   const longestAudioPack = [...packs].sort((a, b) => getPackDuration(b) - getPackDuration(a))[0] ?? fallbackPack;
   const levelCounts = new Map<number, number>();
   const styleCounts = new Map<string, number>();
@@ -738,11 +776,6 @@ function buildStats(records: SongRecord[]) {
       percent: Math.max(6, Math.round((count / maxStyleCount) * 100)),
     }));
 
-  const hardest = allCharts.reduce(
-    (winner, item) => ((item.step.level ?? 0) > winner.level ? { pack: item.pack, level: item.step.level ?? 0 } : winner),
-    { pack: fallbackPack, level: 0 },
-  );
-
   return {
     packName: `${packs.length} SMZIP packs`,
     songCount: records.length,
@@ -756,7 +789,14 @@ function buildStats(records: SongRecord[]) {
       pack: topRatedPack,
       rating: seededScore(topRatedPack.id, 35, 50) / 10,
     },
-    hardest,
+    mostCharts: {
+      pack: mostChartsPack,
+      charts: getPackChartCount(mostChartsPack),
+    },
+    mostSimfiles: {
+      pack: mostSimfilesPack,
+      simfiles: mostSimfilesPack.songs.length,
+    },
     longestAudio: {
       pack: longestAudioPack,
       duration: getPackDuration(longestAudioPack),
