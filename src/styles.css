@@ -538,6 +538,27 @@ select option {
   max-height: none;
 }
 
+.pack-list-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-pack-button {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0 14px;
+  font: inherit;
+  font-weight: 900;
+}
+
+.add-pack-button:hover,
+.add-pack-button:focus-visible {
+  filter: brightness(1.06);
+}
+
 .song-strip {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr) auto;
@@ -752,6 +773,25 @@ select option {
 
 .pack-editor > div:first-child small {
   color: var(--muted);
+}
+
+.new-pack-editor {
+  background:
+    linear-gradient(90deg, rgba(125, 242, 255, 0.08), rgba(255, 54, 125, 0.025)),
+    rgba(7, 17, 19, 0.62);
+}
+
+.pack-json-editor {
+  min-height: 260px;
+  font-family: Consolas, "SFMono-Regular", monospace;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.draft-error {
+  grid-column: 1 / -1;
+  color: #ff9ebf;
+  font-size: 0.9rem;
 }
 
 textarea {

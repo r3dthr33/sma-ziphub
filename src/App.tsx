@@ -80,7 +80,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.32</strong>
+            <strong>v0.0.33</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -303,6 +303,37 @@ function Database({
   viewingPack: boolean;
 }) {
   const allStylesSelected = styleFilters.length === styles.length;
+  const [addingPack, setAddingPack] = useState(false);
+  const [newPackSaved, setNewPackSaved] = useState(false);
+  const [newPackError, setNewPackError] = useState("");
+  const examplePack = packs.find((pack) => pack.name === "Aldo_MX") ?? packs[packs.length - 1] ?? selectedPack;
+  const storedNewPack = readLocalDraft("smamx-new-pack-draft");
+  const [newPackDraft, setNewPackDraft] = useState(() => ({
+    name: storedNewPack?.name ?? `${examplePack.name} copy`,
+    author: storedNewPack?.author ?? examplePack.author,
+    downloadUrl: storedNewPack?.downloadUrl ?? `https://r3dthr33.github.io/sma-ziphub/packs/${examplePack.id}.smzip`,
+    sourcePath: storedNewPack?.sourcePath ?? examplePack.sourcePath,
+    notes: storedNewPack?.notes ?? "",
+    json: storedNewPack?.json ?? JSON.stringify(examplePack, null, 2),
+  }));
+
+  function updateNewPackDraft(field: keyof typeof newPackDraft, value: string) {
+    setNewPackSaved(false);
+    setNewPackError("");
+    setNewPackDraft((current) => ({ ...current, [field]: value }));
+  }
+
+  function saveNewPackDraft() {
+    try {
+      JSON.parse(newPackDraft.json);
+      window.localStorage.setItem("smamx-new-pack-draft", JSON.stringify(newPackDraft));
+      setNewPackSaved(true);
+      setNewPackError("");
+    } catch {
+      setNewPackSaved(false);
+      setNewPackError("Pack JSON is not valid.");
+    }
+  }
 
   return (
     <section className="database-layout pack-database page-section">
@@ -390,38 +421,93 @@ function Database({
       <div className="song-wheel pack-browser" aria-live="polite">
         {viewingPack ? (
           <PackContents key={selectedPack.id} pack={selectedPack} onBack={() => setViewingPack(false)} />
-        ) : filteredPacks.length === 0 ? (
-          <div className="empty-state">
-            <strong>No packs found</strong>
-            <span>Select at least one style or try another search.</span>
-          </div>
         ) : (
-          filteredPacks.map((pack) => (
-            <button
-              className={pack.id === selectedPack.id ? "song-strip pack-strip selected" : "song-strip pack-strip"}
-              key={pack.id}
-              onClick={() => {
-                setSelectedPackId(pack.id);
-                setViewingPack(true);
-              }}
-              type="button"
-            >
-              <span className="pack-score">
-                <span className="level-chip">{getPackLevelRange(pack)}</span>
-                <small className="pack-stars" aria-label={`${(seededScore(pack.id, 35, 50) / 10).toFixed(1)} rating`}>
-                  {getRatingStars(seededScore(pack.id, 35, 50) / 10)}
-                </small>
-                <small className="pack-downloads">{getPackDownloads(pack).toLocaleString()} downloads</small>
-              </span>
-              <span>
-                <strong>{pack.name}</strong>
-                <small>
-                  {pack.songs.length} simfiles, {getPackChartCount(pack)} charts
-                </small>
-              </span>
-              <em>{pack.author} - {getPackStyles(pack).join(", ")}</em>
-            </button>
-          ))
+          <>
+            <div className="pack-list-toolbar">
+              <button className="add-pack-button" onClick={() => setAddingPack((adding) => !adding)} type="button">
+                {addingPack ? "Close new pack" : "Add pack"}
+              </button>
+            </div>
+
+            {addingPack && (
+              <section className="pack-editor new-pack-editor" aria-label="Add new pack">
+                <div>
+                  <h2>Add new pack</h2>
+                  <small>{newPackSaved ? "Draft saved in this browser" : "Seeded from Aldo_MX"}</small>
+                </div>
+
+                <label>
+                  Pack name
+                  <input onChange={(event) => updateNewPackDraft("name", event.target.value)} value={newPackDraft.name} />
+                </label>
+
+                <label>
+                  Author
+                  <input onChange={(event) => updateNewPackDraft("author", event.target.value)} value={newPackDraft.author} />
+                </label>
+
+                <label>
+                  Download URL
+                  <input onChange={(event) => updateNewPackDraft("downloadUrl", event.target.value)} value={newPackDraft.downloadUrl} />
+                </label>
+
+                <label>
+                  Source path
+                  <input onChange={(event) => updateNewPackDraft("sourcePath", event.target.value)} value={newPackDraft.sourcePath} />
+                </label>
+
+                <label className="editor-notes">
+                  Full pack JSON
+                  <textarea className="pack-json-editor" onChange={(event) => updateNewPackDraft("json", event.target.value)} value={newPackDraft.json} />
+                </label>
+
+                <label className="editor-notes">
+                  Notes
+                  <textarea onChange={(event) => updateNewPackDraft("notes", event.target.value)} value={newPackDraft.notes} />
+                </label>
+
+                {newPackError && <strong className="draft-error">{newPackError}</strong>}
+
+                <button className="save-draft-button" onClick={saveNewPackDraft} type="button">
+                  Save new pack draft
+                </button>
+              </section>
+            )}
+
+            {filteredPacks.length === 0 ? (
+              <div className="empty-state">
+                <strong>No packs found</strong>
+                <span>Select at least one style or try another search.</span>
+              </div>
+            ) : (
+              filteredPacks.map((pack) => (
+                <button
+                  className={pack.id === selectedPack.id ? "song-strip pack-strip selected" : "song-strip pack-strip"}
+                  key={pack.id}
+                  onClick={() => {
+                    setSelectedPackId(pack.id);
+                    setViewingPack(true);
+                  }}
+                  type="button"
+                >
+                  <span className="pack-score">
+                    <span className="level-chip">{getPackLevelRange(pack)}</span>
+                    <small className="pack-stars" aria-label={`${(seededScore(pack.id, 35, 50) / 10).toFixed(1)} rating`}>
+                      {getRatingStars(seededScore(pack.id, 35, 50) / 10)}
+                    </small>
+                    <small className="pack-downloads">{getPackDownloads(pack).toLocaleString()} downloads</small>
+                  </span>
+                  <span>
+                    <strong>{pack.name}</strong>
+                    <small>
+                      {pack.songs.length} simfiles, {getPackChartCount(pack)} charts
+                    </small>
+                  </span>
+                  <em>{pack.author} - {getPackStyles(pack).join(", ")}</em>
+                </button>
+              ))
+            )}
+          </>
         )}
       </div>
     </section>
@@ -608,6 +694,17 @@ function getPackDownloads(pack: PackEntry) {
 }
 
 function readPackDraft(key: string): { name?: string; author?: string; downloadUrl?: string; sourcePath?: string; notes?: string } | null {
+  return readLocalDraft(key);
+}
+
+function readLocalDraft(key: string): {
+  name?: string;
+  author?: string;
+  downloadUrl?: string;
+  sourcePath?: string;
+  notes?: string;
+  json?: string;
+} | null {
   try {
     const value = window.localStorage.getItem(key);
     return value ? JSON.parse(value) : null;
