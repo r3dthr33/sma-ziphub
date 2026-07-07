@@ -11,6 +11,7 @@ export type StepChart = {
 
 export type SongRecord = {
   id: string;
+  groupName?: string;
   folderName: string;
   title: string;
   artist: string;
@@ -48,6 +49,11 @@ export type PackRecord = {
   name: string;
   sourcePath: string;
   songCount: number;
+  groups?: Array<{
+    name: string;
+    songCount: number;
+    chartCount: number;
+  }>;
   songs: SongRecord[];
 };
 

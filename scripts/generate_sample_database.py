@@ -222,7 +222,7 @@ def find_main_audio(song_dir: Path, tags: dict[str, str]) -> dict[str, object] |
     }
 
 
-def build_song_record(song_dir: Path) -> dict[str, object]:
+def build_song_record(song_dir: Path, group_name: str) -> dict[str, object]:
     chart_files = [
         path
         for path in sorted(song_dir.iterdir(), key=lambda item: item.name.lower())
@@ -248,6 +248,7 @@ def build_song_record(song_dir: Path) -> dict[str, object]:
     bpm = bpm_summary(tags.get("BPMS", "")) or display_bpm_summary(tags.get("DISPLAYBPM", ""))
     return {
         "id": slugify(song_dir.name),
+        "groupName": group_name,
         "folderName": song_dir.name,
         "title": tags.get("TITLE", ""),
         "artist": tags.get("ARTIST", ""),
@@ -278,7 +279,7 @@ def slugify(value: str) -> str:
 
 def build_pack_record(pack_dir: Path) -> dict[str, object]:
     songs = [
-        build_song_record(path)
+        build_song_record(path, pack_dir.name)
         for path in sorted(pack_dir.iterdir(), key=lambda item: item.name.lower())
         if path.is_dir()
     ]
@@ -287,6 +288,13 @@ def build_pack_record(pack_dir: Path) -> dict[str, object]:
         "name": pack_dir.name,
         "sourcePath": str(pack_dir),
         "songCount": len(songs),
+        "groups": [
+            {
+                "name": pack_dir.name,
+                "songCount": len(songs),
+                "chartCount": sum(len(song["steps"]) for song in songs),
+            }
+        ],
         "songs": songs,
     }
 

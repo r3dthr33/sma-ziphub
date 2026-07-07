@@ -514,8 +514,8 @@ select option {
 
 .simfile-list {
   display: grid;
-  gap: 10px;
-  max-height: 430px;
+  gap: 14px;
+  max-height: 620px;
   overflow: auto;
   padding: 16px;
 }
@@ -527,17 +527,18 @@ select option {
 
 .simfile-row {
   overflow: hidden;
+  border: 1px solid rgba(125, 242, 255, 0.12);
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.065);
 }
 
 .simfile-summary {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto auto;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
-  min-height: 70px;
-  padding: 12px;
+  min-height: 104px;
+  padding: 18px;
 }
 
 .simfile-summary span,
@@ -548,6 +549,7 @@ select option {
 
 .simfile-summary strong {
   color: #eef7ff;
+  font-size: 1.12rem;
   overflow-wrap: anywhere;
   line-height: 1.15;
 }
@@ -562,10 +564,12 @@ select option {
 .simfile-summary b,
 .simfile-summary i {
   display: grid;
-  min-width: 62px;
-  min-height: 38px;
+  min-width: 76px;
+  min-height: 48px;
   place-items: center;
   border-radius: 6px;
+  padding: 0 10px;
+  font-weight: 850;
 }
 
 .simfile-summary b {
@@ -577,12 +581,50 @@ select option {
   background: rgba(255, 255, 255, 0.06);
 }
 
+.group-strip {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid rgba(125, 242, 255, 0.12);
+  border-bottom: 1px solid rgba(125, 242, 255, 0.12);
+}
+
+.group-strip h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.group-strip > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.group-pill {
+  display: grid;
+  gap: 2px;
+  min-width: 180px;
+  padding: 12px 14px;
+  border: 1px solid rgba(125, 242, 255, 0.16);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.group-pill strong,
+.group-pill small {
+  display: block;
+}
+
+.group-pill small {
+  color: #99b8c4;
+}
+
 .step-item {
   display: grid;
   grid-template-columns: 104px 1fr auto;
   gap: 10px;
   align-items: center;
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.05);
 }

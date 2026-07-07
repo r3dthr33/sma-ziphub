@@ -303,6 +303,20 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
         </span>
       </div>
 
+      <div className="group-strip">
+        <h2>Groups included</h2>
+        <div>
+          {getPackGroups(pack).map((group) => (
+            <span className="group-pill" key={group.name}>
+              <strong>{group.name}</strong>
+              <small>
+                {group.songCount} simfiles, {group.chartCount} charts
+              </small>
+            </span>
+          ))}
+        </div>
+      </div>
+
       <div className="simfile-list">
         <h2>Simfiles inside</h2>
         {pack.songs.map((song) => (
@@ -323,7 +337,10 @@ function SimfileRow({ song }: { song: SongRecord }) {
       <div className="simfile-summary">
         <span>
           <strong>{displayTitle}</strong>
-          <small>{displayArtist}</small>
+          <small>
+            {displayArtist}
+            {song.groupName ? ` - ${song.groupName}` : ""}
+          </small>
         </span>
         <em>{song.bpm?.display ?? "BPM ?"}</em>
         <b>{topChart ? `Lv ${topChart.level}` : getLevelRange(song)}</b>
@@ -340,6 +357,21 @@ function SimfileRow({ song }: { song: SongRecord }) {
       </div>
     </article>
   );
+}
+
+function getPackGroups(pack: PackEntry) {
+  if (pack.groups?.length) return pack.groups;
+
+  const groups = new Map<string, { name: string; songCount: number; chartCount: number }>();
+  pack.songs.forEach((song) => {
+    const groupName = song.groupName || pack.name;
+    const group = groups.get(groupName) ?? { name: groupName, songCount: 0, chartCount: 0 };
+    group.songCount += 1;
+    group.chartCount += song.steps.length;
+    groups.set(groupName, group);
+  });
+
+  return Array.from(groups.values());
 }
 
 function getSongDisplayTitle(song: SongRecord): string {
