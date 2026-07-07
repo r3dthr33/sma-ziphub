@@ -537,66 +537,82 @@ select option {
 
 .simfile-card {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   min-height: 0;
-  padding: 14px;
   border: 1px solid rgba(125, 242, 255, 0.2);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.065);
   color: inherit;
-  cursor: pointer;
-  text-align: left;
+  overflow: hidden;
   transition:
     background 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
+    border-color 160ms ease;
 }
 
 .simfile-card:hover,
-.simfile-card:focus-visible,
 .simfile-card[aria-expanded="true"] {
   border-color: rgba(125, 242, 255, 0.46);
   background: rgba(125, 242, 255, 0.1);
 }
 
-.simfile-card:focus-visible {
-  outline: 3px solid rgba(125, 242, 255, 0.22);
-  outline-offset: 2px;
+.simfile-card-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, max-content);
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  min-height: 76px;
+  padding: 12px 14px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
 }
 
-.simfile-card:active {
+.simfile-card-summary:focus-visible {
+  outline: 3px solid rgba(125, 242, 255, 0.22);
+  outline-offset: -3px;
+}
+
+.simfile-card-summary:active {
   transform: translateY(1px);
 }
 
-.simfile-card-header {
+.simfile-card-titleblock {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: center;
+  gap: 3px;
+  min-width: 0;
 }
 
-.simfile-card-header p,
-.simfile-card-header h3 {
-  margin: 0;
-}
-
-.simfile-card-header p,
-.simfile-card-header span {
+.simfile-card-titleblock span {
   color: #99b8c4;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.simfile-card-header h3 {
-  margin-top: 2px;
+.simfile-card-titleblock strong {
   color: #eef7ff;
   font-size: clamp(1rem, 1.6vw, 1.35rem);
-  line-height: 1.08;
-  overflow-wrap: anywhere;
+  line-height: 1.12;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.simfile-card-kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
 }
 
 .simfile-card-stats {
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  gap: 6px;
+  grid-template-columns: minmax(132px, auto) minmax(112px, auto) minmax(104px, auto);
+  gap: 8px;
+  justify-content: end;
 }
 
 .simfile-card-stats span,
@@ -626,7 +642,7 @@ select option {
   grid-auto-columns: minmax(170px, max-content);
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding: 0 14px 12px;
   scrollbar-width: none;
   mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 28px), transparent 100%);
 }
@@ -834,7 +850,7 @@ details p {
   .topbar,
   .metric-row,
   .song-strip,
-  .simfile-card-header,
+  .simfile-card-summary,
   .simfile-card-stats,
   .qr-panel {
     grid-template-columns: 1fr;
@@ -888,25 +904,30 @@ details p {
   }
 
   .simfile-card {
+    gap: 6px;
+  }
+
+  .simfile-card-summary {
     gap: 8px;
+    min-height: 0;
     padding: 10px;
   }
 
-  .simfile-card-header {
-    gap: 8px;
+  .simfile-card-titleblock {
+    gap: 2px;
   }
 
-  .simfile-card-header p,
-  .simfile-card-header span {
+  .simfile-card-titleblock span {
     font-size: 0.78rem;
   }
 
-  .simfile-card-header h3 {
+  .simfile-card-titleblock strong {
     font-size: 0.98rem;
   }
 
   .simfile-card-stats {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .simfile-card-stats span,
@@ -914,6 +935,10 @@ details p {
     min-height: 32px;
     padding: 0 6px;
     font-size: 0.78rem;
+  }
+
+  .level-chip-list {
+    padding: 0 10px 10px;
   }
 
   .chart-level-chip {

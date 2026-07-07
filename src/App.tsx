@@ -61,7 +61,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.5</strong>
+            <strong>v0.0.6</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -343,31 +343,25 @@ function SimfileRow({ song }: { song: SongRecord }) {
     .sort((a, b) => Number(b.level) - Number(a.level));
 
   return (
-    <article
-      aria-expanded={chartsVisible}
-      className="simfile-card"
-      onClick={() => setChartsVisible((visible) => !visible)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          setChartsVisible((visible) => !visible);
-        }
-      }}
-      role="button"
-      tabIndex={0}
-    >
-      <header className="simfile-card-header">
-        <div>
-          <p>{song.groupName || "Group"}</p>
-          <h3>{displayTitle}</h3>
+    <article className="simfile-card" aria-expanded={chartsVisible}>
+      <button
+        aria-expanded={chartsVisible}
+        className="simfile-card-summary"
+        onClick={() => setChartsVisible((visible) => !visible)}
+        type="button"
+      >
+        <div className="simfile-card-titleblock">
+          <span className="simfile-card-kicker">{song.groupName || "Group"}</span>
+          <strong>{displayTitle}</strong>
           <span>{displayArtist || "Unknown artist"}</span>
         </div>
+
         <div className="simfile-card-stats">
           <span>BPM {song.bpm?.display ?? "?"}</span>
           <strong>{levelRange === "Unrated" ? levelRange : `Lv ${levelRange}`}</strong>
           <span>{chartsVisible ? "Hide charts" : `${song.steps.length} charts`}</span>
         </div>
-      </header>
+      </button>
 
       {chartsVisible && (
         <div className="level-chip-list" aria-label={`Chart levels for ${displayTitle}`}>
