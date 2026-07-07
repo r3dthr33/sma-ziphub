@@ -553,7 +553,7 @@ select option {
 
 .simfile-trigger {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 54px;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
   width: 100%;
@@ -645,16 +645,6 @@ select option {
 .simfile-meta .simfile-level small,
 .simfile-meta .simfile-level strong {
   color: #061015;
-}
-
-.simfile-cue {
-  display: grid;
-  min-height: 36px;
-  place-items: center;
-  border-radius: 6px;
-  background: rgba(8, 17, 22, 0.62);
-  color: #99b8c4;
-  font-size: 0.78rem;
 }
 
 .simfile-charts {
@@ -957,13 +947,8 @@ details p {
     display: none;
   }
 
-  .simfile-meta strong,
-  .simfile-cue {
+  .simfile-meta strong {
     font-size: 0.78rem;
-  }
-
-  .simfile-cue {
-    min-height: 30px;
   }
 
   .simfile-charts {

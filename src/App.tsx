@@ -61,7 +61,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.8</strong>
+            <strong>v0.0.9</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -372,8 +372,6 @@ function SimfileRow({ song }: { song: SongRecord }) {
             <strong>{song.steps.length}</strong>
           </div>
         </div>
-
-        <span className="simfile-cue">{chartsVisible ? "Hide" : "View"}</span>
       </button>
 
       {chartsVisible && (
