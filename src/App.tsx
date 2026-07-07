@@ -61,7 +61,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.2</strong>
+            <strong>v0.0.3</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -251,7 +251,6 @@ function Database({
 function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void }) {
   const topChart = getTopPackChart(pack);
   const payload = `smamx://install-pack?pack=${encodeURIComponent(pack.id)}&url=${encodeURIComponent(`https://r3dthr33.github.io/sma-ziphub/packs/${pack.id}.smzip`)}`;
-  const [expandedSongId, setExpandedSongId] = useState<string | null>(pack.songs[0]?.id ?? null);
 
   return (
     <div className="pack-contents">
@@ -323,49 +322,49 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
       <div className="simfile-list">
         <h2>Simfiles inside</h2>
         {pack.songs.map((song) => (
-          <SimfileRow
-            expanded={expandedSongId === song.id}
-            key={song.id}
-            onToggle={() => setExpandedSongId((currentId) => (currentId === song.id ? null : song.id))}
-            song={song}
-          />
+          <SimfileRow key={song.id} song={song} />
         ))}
       </div>
     </div>
   );
 }
 
-function SimfileRow({ expanded, onToggle, song }: { expanded: boolean; onToggle: () => void; song: SongRecord }) {
+function SimfileRow({ song }: { song: SongRecord }) {
   const topChart = getTopChart(song);
   const displayTitle = getSongDisplayTitle(song);
   const displayArtist = song.metadata.artistTranslit || song.artist || getSongDisplayArtist(song);
+  const chartLevels = song.steps
+    .map((step) => ({
+      label: step.description || step.difficulty || step.style || "Chart",
+      level: step.levelRaw || "?",
+      style: step.style,
+    }))
+    .sort((a, b) => Number(b.level) - Number(a.level));
 
   return (
-    <article className="simfile-row">
-      <button className="simfile-summary" onClick={onToggle} type="button" aria-expanded={expanded}>
-        <span>
-          <strong>{displayTitle}</strong>
-          <small>
-            {displayArtist}
-            {song.groupName ? ` - ${song.groupName}` : ""}
-          </small>
-        </span>
-        <em>{song.bpm?.display ?? "BPM ?"}</em>
-        <b>{topChart ? `Lv ${topChart.level}` : getLevelRange(song)}</b>
-        <i>{song.steps.length} charts</i>
-        <u>{expanded ? "Hide" : "Levels"}</u>
-      </button>
-      {expanded && (
-        <div className="step-list">
-          {song.steps.map((step) => (
-            <div className="step-item" key={`${song.id}-${step.sourceFile}-${step.description}-${step.levelRaw}`}>
-              <span>{step.style}</span>
-              <strong>{step.description || step.difficulty || "Chart"}</strong>
-              <em>Lv {step.levelRaw || "?"}</em>
-            </div>
-          ))}
+    <article className="simfile-card">
+      <header className="simfile-card-header">
+        <div>
+          <p>{song.groupName || "Group"}</p>
+          <h3>{displayTitle}</h3>
+          <span>{displayArtist || "Unknown artist"}</span>
         </div>
-      )}
+        <div className="simfile-card-stats">
+          <span>BPM {song.bpm?.display ?? "?"}</span>
+          <strong>{topChart ? `Lv ${topChart.level}` : getLevelRange(song)}</strong>
+          <span>{song.steps.length} charts</span>
+        </div>
+      </header>
+
+      <div className="level-chip-list" aria-label={`Chart levels for ${displayTitle}`}>
+        {chartLevels.map((chart, index) => (
+          <span className="chart-level-chip" key={`${song.id}-${chart.style}-${chart.label}-${chart.level}-${index}`}>
+            <strong>Lv {chart.level}</strong>
+            <em>{chart.label}</em>
+            <small>{chart.style}</small>
+          </span>
+        ))}
+      </div>
     </article>
   );
 }

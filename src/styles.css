@@ -512,16 +512,9 @@ select option {
   font-size: 1.2rem;
 }
 
-.step-list {
-  display: grid;
-  gap: 8px;
-  padding: 14px;
-}
-
 .simfile-list {
   display: grid;
-  gap: 14px;
-  max-height: 620px;
+  gap: 16px;
   overflow: auto;
   padding: 16px;
 }
@@ -531,80 +524,97 @@ select option {
   font-size: 1.35rem;
 }
 
-.simfile-row {
-  overflow: hidden;
-  border: 1px solid rgba(125, 242, 255, 0.12);
+.simfile-card {
+  display: grid;
+  gap: 14px;
+  min-height: 170px;
+  padding: 18px;
+  border: 1px solid rgba(125, 242, 255, 0.2);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.065);
 }
 
-.simfile-summary {
+.simfile-card-header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto auto auto;
-  gap: 16px;
-  align-items: center;
-  min-height: 104px;
-  padding: 18px;
-  width: 100%;
-  border: 0;
-  background: transparent;
-  color: #eef7ff;
-  text-align: left;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
 }
 
-.simfile-summary span,
-.simfile-summary strong,
-.simfile-summary small {
-  display: block;
+.simfile-card-header p,
+.simfile-card-header h3 {
+  margin: 0;
 }
 
-.simfile-summary strong {
-  color: #eef7ff;
-  font-size: 1.12rem;
-  overflow-wrap: anywhere;
-  line-height: 1.15;
-}
-
-.simfile-summary small,
-.simfile-summary em,
-.simfile-summary i {
+.simfile-card-header p,
+.simfile-card-header span {
   color: #99b8c4;
-  font-style: normal;
 }
 
-.simfile-summary b,
-.simfile-summary i,
-.simfile-summary u {
+.simfile-card-header h3 {
+  margin-top: 4px;
+  color: #eef7ff;
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.simfile-card-stats {
   display: grid;
-  min-width: 76px;
-  min-height: 48px;
+  grid-template-columns: repeat(3, auto);
+  gap: 8px;
+}
+
+.simfile-card-stats span,
+.simfile-card-stats strong {
+  display: grid;
+  min-height: 42px;
   place-items: center;
   border-radius: 6px;
-  padding: 0 10px;
-  font-weight: 850;
-  text-decoration: none;
+  padding: 0 12px;
+  white-space: nowrap;
 }
 
-.simfile-summary b {
-  background: rgba(125, 242, 255, 0.15);
+.simfile-card-stats span {
+  color: #b9d0d9;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.simfile-card-stats strong {
+  color: #061015;
+  background: #7df2ff;
+}
+
+.level-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chart-level-chip {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr);
+  gap: 4px 8px;
+  align-items: center;
+  min-width: 190px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: rgba(8, 17, 22, 0.72);
+}
+
+.chart-level-chip strong {
   color: #7df2ff;
 }
 
-.simfile-summary i {
-  background: rgba(255, 255, 255, 0.06);
+.chart-level-chip em {
+  color: #eef7ff;
+  font-style: normal;
+  overflow-wrap: anywhere;
 }
 
-.simfile-summary u {
-  background: #7df2ff;
-  color: #061015;
-}
-
-.simfile-summary:hover {
-  background: rgba(125, 242, 255, 0.08);
-}
-
-.simfile-summary[aria-expanded="true"] {
-  background: rgba(125, 242, 255, 0.12);
+.chart-level-chip small {
+  grid-column: 2;
+  color: #99b8c4;
 }
 
 .group-strip {
@@ -643,22 +653,6 @@ select option {
 
 .group-pill small {
   color: #99b8c4;
-}
-
-.step-item {
-  display: grid;
-  grid-template-columns: 104px 1fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 12px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.step-item span,
-.step-item em {
-  color: #99b8c4;
-  font-style: normal;
 }
 
 .qr-panel {
@@ -800,7 +794,8 @@ details p {
   .topbar,
   .metric-row,
   .song-strip,
-  .simfile-summary,
+  .simfile-card-header,
+  .simfile-card-stats,
   .qr-panel {
     grid-template-columns: 1fr;
   }
@@ -838,7 +833,7 @@ details p {
   }
 
   .detail-grid,
-  .step-item,
+  .chart-level-chip,
   .pack-title-card,
   .title-qr {
     grid-template-columns: 1fr;
