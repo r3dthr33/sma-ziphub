@@ -51,6 +51,10 @@ button {
   cursor: pointer;
 }
 
+textarea {
+  resize: vertical;
+}
+
 .app-shell {
   width: min(1480px, calc(100% - 32px));
   margin: 0 auto;
@@ -634,7 +638,15 @@ select option {
   gap: 12px;
 }
 
-.back-button {
+.pack-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.back-button,
+.edit-pack-button,
+.save-draft-button {
   justify-self: start;
   min-height: 40px;
   border: 1px solid var(--line);
@@ -645,9 +657,20 @@ select option {
   font-weight: 850;
 }
 
-.back-button:hover {
+.back-button:hover,
+.edit-pack-button:hover,
+.save-draft-button:hover {
   border-color: var(--accent);
   background: rgba(125, 242, 255, 0.14);
+}
+
+.edit-pack-button {
+  background: rgba(125, 242, 255, 0.11);
+}
+
+.save-draft-button {
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
 .pack-title-card {
@@ -703,6 +726,49 @@ select option {
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--line);
+}
+
+.pack-editor {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(7, 17, 19, 0.62);
+}
+
+.pack-editor > div:first-child,
+.pack-editor .editor-notes,
+.pack-editor .save-draft-button {
+  grid-column: 1 / -1;
+}
+
+.pack-editor h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.15rem;
+}
+
+.pack-editor > div:first-child small {
+  color: var(--muted);
+}
+
+textarea {
+  width: 100%;
+  min-height: 92px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text);
+  padding: 10px 12px;
+  font: inherit;
+}
+
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(125, 242, 255, 0.14);
 }
 
 .detail-grid span {
@@ -1230,6 +1296,10 @@ details p {
 
   .pack-title-card,
   .title-qr {
+    grid-template-columns: 1fr;
+  }
+
+  .pack-editor {
     grid-template-columns: 1fr;
   }
 

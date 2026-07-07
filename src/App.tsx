@@ -80,7 +80,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.31</strong>
+            <strong>v0.0.32</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -430,16 +430,42 @@ function Database({
 
 function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void }) {
   const [selectedGroup, setSelectedGroup] = useState("all");
+  const [editingPack, setEditingPack] = useState(false);
+  const [draftSaved, setDraftSaved] = useState(false);
   const topChart = getTopPackChart(pack);
   const payload = `smamx://install-pack?pack=${encodeURIComponent(pack.id)}&url=${encodeURIComponent(`https://r3dthr33.github.io/sma-ziphub/packs/${pack.id}.smzip`)}`;
   const packGroups = getPackGroups(pack);
   const visibleSongs = selectedGroup === "all" ? pack.songs : pack.songs.filter((song) => (song.groupName || pack.name) === selectedGroup);
+  const draftKey = `smamx-pack-edit:${pack.id}`;
+  const storedDraft = readPackDraft(draftKey);
+  const [packDraft, setPackDraft] = useState(() => ({
+    name: storedDraft?.name ?? pack.name,
+    author: storedDraft?.author ?? pack.author,
+    downloadUrl: storedDraft?.downloadUrl ?? `https://r3dthr33.github.io/sma-ziphub/packs/${pack.id}.smzip`,
+    sourcePath: storedDraft?.sourcePath ?? pack.sourcePath,
+    notes: storedDraft?.notes ?? "",
+  }));
+
+  function updateDraft(field: keyof typeof packDraft, value: string) {
+    setDraftSaved(false);
+    setPackDraft((current) => ({ ...current, [field]: value }));
+  }
+
+  function saveDraft() {
+    window.localStorage.setItem(draftKey, JSON.stringify(packDraft));
+    setDraftSaved(true);
+  }
 
   return (
     <div className="pack-contents">
-      <button className="back-button" onClick={onBack} type="button">
-        Back to packs
-      </button>
+      <div className="pack-action-row">
+        <button className="back-button" onClick={onBack} type="button">
+          Back to packs
+        </button>
+        <button className="edit-pack-button" onClick={() => setEditingPack((editing) => !editing)} type="button">
+          {editingPack ? "Close editor" : "Edit pack"}
+        </button>
+      </div>
 
       <div className="pack-title-card">
         <div className="song-banner">
@@ -463,6 +489,44 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
           </div>
         </div>
       </div>
+
+      {editingPack && (
+        <section className="pack-editor" aria-label={`Edit ${pack.name}`}>
+          <div>
+            <h2>Edit pack</h2>
+            <small>{draftSaved ? "Draft saved in this browser" : "Local draft"}</small>
+          </div>
+
+          <label>
+            Pack name
+            <input onChange={(event) => updateDraft("name", event.target.value)} value={packDraft.name} />
+          </label>
+
+          <label>
+            Author
+            <input onChange={(event) => updateDraft("author", event.target.value)} value={packDraft.author} />
+          </label>
+
+          <label>
+            Download URL
+            <input onChange={(event) => updateDraft("downloadUrl", event.target.value)} value={packDraft.downloadUrl} />
+          </label>
+
+          <label>
+            Source path
+            <input onChange={(event) => updateDraft("sourcePath", event.target.value)} value={packDraft.sourcePath} />
+          </label>
+
+          <label className="editor-notes">
+            Notes
+            <textarea onChange={(event) => updateDraft("notes", event.target.value)} value={packDraft.notes} />
+          </label>
+
+          <button className="save-draft-button" onClick={saveDraft} type="button">
+            Save draft
+          </button>
+        </section>
+      )}
 
       <div className="detail-grid">
         <span>
@@ -541,6 +605,15 @@ function getRatingStars(score: number) {
 
 function getPackDownloads(pack: PackEntry) {
   return seededScore(pack.id, 800, 9200);
+}
+
+function readPackDraft(key: string): { name?: string; author?: string; downloadUrl?: string; sourcePath?: string; notes?: string } | null {
+  try {
+    const value = window.localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  } catch {
+    return null;
+  }
 }
 
 function getOnlineUsers() {
