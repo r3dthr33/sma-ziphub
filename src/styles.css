@@ -298,7 +298,7 @@ h2 {
 }
 
 .pack-database {
-  grid-template-columns: 250px minmax(360px, 0.9fr) minmax(420px, 1.2fr);
+  grid-template-columns: 250px minmax(0, 1fr);
 }
 
 .filter-panel {
@@ -345,6 +345,11 @@ select option {
   max-height: 720px;
   overflow: auto;
   padding: 12px;
+}
+
+.pack-browser {
+  align-content: start;
+  max-height: none;
 }
 
 .song-strip {
@@ -416,6 +421,35 @@ select option {
   overflow: hidden;
 }
 
+.pack-contents {
+  display: grid;
+  gap: 12px;
+}
+
+.back-button {
+  justify-self: start;
+  min-height: 42px;
+  border: 1px solid rgba(125, 242, 255, 0.28);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #eef7ff;
+  padding: 0 14px;
+  font-weight: 850;
+}
+
+.back-button:hover {
+  border-color: #7df2ff;
+  background: rgba(125, 242, 255, 0.14);
+}
+
+.pack-title-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 390px);
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(8, 17, 22, 0.76);
+}
+
 .song-banner {
   display: flex;
   min-height: 210px;
@@ -435,6 +469,20 @@ select option {
 .song-banner strong {
   font-size: clamp(2rem, 4vw, 3.6rem);
   line-height: 0.95;
+}
+
+.title-qr {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+  border-left: 1px solid rgba(125, 242, 255, 0.16);
+  background: rgba(8, 17, 22, 0.9);
+}
+
+.title-qr strong {
+  display: block;
 }
 
 .detail-grid {
@@ -717,7 +765,14 @@ details p {
   }
 
   .detail-grid,
-  .step-item {
+  .step-item,
+  .pack-title-card,
+  .title-qr {
     grid-template-columns: 1fr;
+  }
+
+  .title-qr {
+    border-left: 0;
+    border-top: 1px solid rgba(125, 242, 255, 0.16);
   }
 }

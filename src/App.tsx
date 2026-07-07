@@ -173,6 +173,8 @@ function Database({
   styleFilter: string;
   styles: string[];
 }) {
+  const [viewingPack, setViewingPack] = useState(false);
+
   return (
     <section className="database-layout pack-database page-section">
       <aside className="filter-panel">
@@ -209,8 +211,10 @@ function Database({
         </label>
       </aside>
 
-      <div className="song-wheel pack-wheel" aria-live="polite">
-        {filteredPacks.length === 0 ? (
+      <div className="song-wheel pack-browser" aria-live="polite">
+        {viewingPack ? (
+          <PackContents pack={selectedPack} onBack={() => setViewingPack(false)} />
+        ) : filteredPacks.length === 0 ? (
           <div className="empty-state">
             <strong>No packs found</strong>
             <span>Try another search or reset the style filter.</span>
@@ -220,7 +224,10 @@ function Database({
             <button
               className={pack.id === selectedPack.id ? "song-strip pack-strip selected" : "song-strip pack-strip"}
               key={pack.id}
-              onClick={() => setSelectedPackId(pack.id)}
+              onClick={() => {
+                setSelectedPackId(pack.id);
+                setViewingPack(true);
+              }}
               type="button"
             >
               <span className="level-chip">{getPackLevelRange(pack)}</span>
@@ -235,22 +242,38 @@ function Database({
           ))
         )}
       </div>
-
-      <PackDetails pack={selectedPack} />
     </section>
   );
 }
 
-function PackDetails({ pack }: { pack: PackEntry }) {
+function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void }) {
   const topChart = getTopPackChart(pack);
   const payload = `smamx://install-pack?pack=${encodeURIComponent(pack.id)}&url=${encodeURIComponent(`https://r3dthr33.github.io/sma-ziphub/packs/${pack.id}.smzip`)}`;
 
   return (
-    <aside className="song-detail pack-detail">
-      <div className="song-banner">
-        <span>SMZIP pack</span>
-        <strong>{pack.name}</strong>
-        <small>{pack.songs.length} simfiles included</small>
+    <div className="pack-contents">
+      <button className="back-button" onClick={onBack} type="button">
+        Back to packs
+      </button>
+
+      <div className="pack-title-card">
+        <div className="song-banner">
+          <span>SMZIP pack</span>
+          <strong>{pack.name}</strong>
+          <small>{pack.songs.length} simfiles included</small>
+        </div>
+
+        <div className="title-qr">
+          <div className="qr-mock" aria-label="Prototype pack QR code visual">
+            {Array.from({ length: 49 }, (_, index) => (
+              <i className={(index * pack.id.length + index) % 5 < 2 ? "on" : ""} key={index} />
+            ))}
+          </div>
+          <div>
+            <strong>Pack QR</strong>
+            <code>{payload}</code>
+          </div>
+        </div>
       </div>
 
       <div className="detail-grid">
@@ -286,19 +309,7 @@ function PackDetails({ pack }: { pack: PackEntry }) {
           <SimfileRow key={song.id} song={song} />
         ))}
       </div>
-
-      <div className="qr-panel">
-        <div className="qr-mock" aria-label="Prototype pack QR code visual">
-          {Array.from({ length: 49 }, (_, index) => (
-            <i className={(index * pack.id.length + index) % 5 < 2 ? "on" : ""} key={index} />
-          ))}
-        </div>
-        <div>
-          <strong>One QR for the whole pack</strong>
-          <code>{payload}</code>
-        </div>
-      </div>
-    </aside>
+    </div>
   );
 }
 
