@@ -1,0 +1,1047 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-07T00:42:48.755463+00:00",
+  "sourcePath": "E:\\Games\\StepMania AMX 6\\Songs\\Aldo_MX",
+  "pack": {
+    "name": "Aldo_MX",
+    "songCount": 15,
+    "songs": [
+      {
+        "id": "aldo-mx-nueel-andamiro-usa-take-on-me",
+        "folderName": "[Aldo_MX & Nueel] AndaMiro USA - Take on Me",
+        "title": "Take on Me",
+        "artist": "BanYa vs A-Ha",
+        "bpm": {
+          "display": "83.5/167/334",
+          "min": 83.5,
+          "max": 334.0,
+          "changes": 4,
+          "raw": "0r=167.000,\n26304r=83.500,\n27600r=334.000,\n27792r=167.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 101.774,
+          "sizeBytes": 1632592
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX & Nueel",
+          "music": "SONG.MP3",
+          "sampleStart": 31.5,
+          "sampleLength": 10.0,
+          "offset": -0.11,
+          "selectable": "YES",
+          "smaVersion": "b2.15"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Hard (Nueel)",
+            "difficulty": "Medium",
+            "level": 5,
+            "levelRaw": "5",
+            "radarValues": [
+              0.17,
+              0.347,
+              0.039,
+              0.236,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy (Aldo_MX)",
+            "difficulty": "Hard",
+            "level": 12,
+            "levelRaw": "12",
+            "radarValues": [
+              0.564,
+              0.608,
+              0.059,
+              0.118,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Wild (Nueel)",
+            "difficulty": "Challenge",
+            "level": 14,
+            "levelRaw": "14",
+            "radarValues": [
+              0.726,
+              0.788,
+              0.255,
+              0.137,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-double",
+            "styleIsKnown": true,
+            "description": "Nightmare (Aldo_MX)",
+            "difficulty": "Hard",
+            "level": 14,
+            "levelRaw": "14",
+            "radarValues": [
+              0.578,
+              0.608,
+              0.059,
+              0.216,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-caramell-come-and-hold-me-tonight",
+        "folderName": "[Aldo_MX] Caramell - Come and Hold me Tonight",
+        "title": "Kom hall om mig i natt",
+        "artist": "Caramell",
+        "bpm": {
+          "display": "138",
+          "min": 138.0,
+          "max": 138.0,
+          "changes": 1,
+          "raw": "0r=138.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 120.145,
+          "sizeBytes": 1922322
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "Come and Hold me Tonight",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 1.95,
+          "sampleLength": 7.0,
+          "offset": -0.215,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "",
+            "difficulty": "Hard",
+            "level": 15,
+            "levelRaw": "15",
+            "radarValues": [
+              0.77,
+              1.0,
+              0.266,
+              0.424,
+              0.878
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-cj-crew-feat-shazza-zigeunerweisen-op-20",
+        "folderName": "[Aldo_MX] CJ Crew feat. SHAZZA - Zigeunerweisen, Op.20",
+        "title": "Zigeunerweisen, Op.20",
+        "artist": "CJ Crew feat. SHAZZA",
+        "bpm": {
+          "display": "180",
+          "min": 180.0,
+          "max": 180.0,
+          "changes": 1,
+          "raw": "0r=180.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 96.731,
+          "sizeBytes": 2323805
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 5.45,
+          "sampleLength": 7.0,
+          "offset": -0.165,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy (26)",
+            "difficulty": "Hard",
+            "level": 26,
+            "levelRaw": "26",
+            "radarValues": [
+              1.0,
+              1.0,
+              0.744,
+              0.403,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-daniwell-nekomimi-switch",
+        "folderName": "[Aldo_MX] daniwell - Nekomimi Switch",
+        "title": "Nekomimi Switch",
+        "artist": "daniwell",
+        "bpm": {
+          "display": "160",
+          "min": 160.0,
+          "max": 160.0,
+          "changes": 1,
+          "raw": "0r=160.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 114.939,
+          "sizeBytes": 2762686
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 15.0,
+          "sampleLength": 7.0,
+          "offset": 0.0,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "",
+            "difficulty": "Hard",
+            "level": 14,
+            "levelRaw": "14",
+            "radarValues": [
+              0.612,
+              0.633,
+              0.296,
+              0.139,
+              0.131
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-esti-oblivion",
+        "folderName": "[Aldo_MX] ESTi - OblivioN",
+        "title": "OblivioN",
+        "artist": "ESTi",
+        "bpm": {
+          "display": "141",
+          "min": 141.0,
+          "max": 141.0,
+          "changes": 1,
+          "raw": "0r=141.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 122.653,
+          "sizeBytes": 3682589
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.MP3",
+          "sampleStart": 70.0,
+          "sampleLength": 7.0,
+          "offset": 0.165,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy",
+            "difficulty": "Hard",
+            "level": 16,
+            "levelRaw": "16",
+            "radarValues": [
+              0.789,
+              1.0,
+              0.603,
+              0.685,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-hirokazu-ando-dreamland",
+        "folderName": "[Aldo_MX] Hirokazu Ando - Dreamland",
+        "title": "Dreamland",
+        "artist": "Hirokazu Ando",
+        "bpm": {
+          "display": "186.84",
+          "min": 186.84,
+          "max": 186.84,
+          "changes": 1,
+          "raw": "0r=186.840"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 128.47,
+          "sizeBytes": 2055523
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Unknown StepMaker",
+          "music": "SONG.mp3",
+          "sampleStart": 43.65,
+          "sampleLength": 7.0,
+          "offset": -1.36,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Normal",
+            "difficulty": "Easy",
+            "level": 5,
+            "levelRaw": "5",
+            "radarValues": [
+              0.34,
+              0.385,
+              0.125,
+              0.171,
+              0.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Hard",
+            "difficulty": "Medium",
+            "level": 10,
+            "levelRaw": "10",
+            "radarValues": [
+              0.549,
+              0.654,
+              0.0,
+              0.226,
+              0.304
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy",
+            "difficulty": "Hard",
+            "level": 13,
+            "levelRaw": "13",
+            "radarValues": [
+              0.917,
+              1.0,
+              0.459,
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Wild",
+            "difficulty": "Challenge",
+            "level": 18,
+            "levelRaw": "18",
+            "radarValues": [
+              1.0,
+              1.0,
+              0.568,
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-double",
+            "styleIsKnown": true,
+            "description": "Double",
+            "difficulty": "Medium",
+            "level": 12,
+            "levelRaw": "12",
+            "radarValues": [
+              0.61,
+              0.694,
+              0.218,
+              0.342,
+              0.475
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-double",
+            "styleIsKnown": true,
+            "description": "Nightmare",
+            "difficulty": "Hard",
+            "level": 16,
+            "levelRaw": "16",
+            "radarValues": [
+              0.97,
+              1.0,
+              0.49,
+              1.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-ho-kago-tea-time-go-go-maniac",
+        "folderName": "[Aldo_MX] Ho-Kago Tea Time - GO! GO! MANIAC",
+        "title": "GO! GO! MANIAC",
+        "artist": "Ho-Kago Tea Time",
+        "bpm": {
+          "display": "125",
+          "min": 125.0,
+          "max": 125.0,
+          "changes": 1,
+          "raw": "0r=125.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 89.883,
+          "sizeBytes": 2161162
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 8.85,
+          "sampleLength": 7.0,
+          "offset": 0.1,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy",
+            "difficulty": "Hard",
+            "level": 16,
+            "levelRaw": "16",
+            "radarValues": [
+              0.72,
+              1.0,
+              0.412,
+              0.412,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-ho-kago-tea-time-no-thank-you",
+        "folderName": "[Aldo_MX] Ho-Kago Tea Time - No, Thank You!",
+        "title": "NO, Thank You!",
+        "artist": "Ho-Kago TeaTime",
+        "bpm": {
+          "display": "181",
+          "min": 181.0,
+          "max": 181.0,
+          "changes": 1,
+          "raw": "0r=181.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 89.548,
+          "sizeBytes": 1432764
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 64.375,
+          "sampleLength": 7.0,
+          "offset": 0.025,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy (14)",
+            "difficulty": "Hard",
+            "level": 14,
+            "levelRaw": "14",
+            "radarValues": [
+              0.772,
+              1.0,
+              0.536,
+              0.659,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-mangnani-mozart-s-requiem",
+        "folderName": "[Aldo_MX] Mangnani - Mozart's Requiem",
+        "title": "Mozart's Requiem",
+        "artist": "Mangnani",
+        "bpm": {
+          "display": "180",
+          "min": 180.0,
+          "max": 180.0,
+          "changes": 1,
+          "raw": "0r=180.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 90.984,
+          "sizeBytes": 1455751
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Another by Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 22.66,
+          "sampleLength": 7.0,
+          "offset": 0.0,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy (Aldo_MX)",
+            "difficulty": "Hard",
+            "level": 17,
+            "levelRaw": "17",
+            "radarValues": [
+              0.884,
+              0.972,
+              0.22,
+              0.264,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-nueel-aires-gitanos",
+        "folderName": "[Aldo_MX] Nueel - Aires Gitanos",
+        "title": "Aires Gitanos",
+        "artist": "Nueel",
+        "bpm": {
+          "display": "168/1344",
+          "min": 168.0,
+          "max": 1344.0,
+          "changes": 3,
+          "raw": "0r=168.000,\n56832r=1344.000,\n58272r=168.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 108.037,
+          "sizeBytes": 2596858
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 4.25,
+          "sampleLength": 7.0,
+          "offset": -0.04,
+          "selectable": "YES",
+          "smaVersion": "b2.15"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy",
+            "difficulty": "Hard",
+            "level": 23,
+            "levelRaw": "23",
+            "radarValues": [
+              1.0,
+              1.0,
+              0.491,
+              0.13,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-double",
+            "styleIsKnown": true,
+            "description": "Nightmare",
+            "difficulty": "Hard",
+            "level": 23,
+            "levelRaw": "23",
+            "radarValues": [
+              1.0,
+              1.0,
+              0.528,
+              0.12,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-double",
+            "styleIsKnown": true,
+            "description": "Double Performance",
+            "difficulty": "Edit",
+            "level": 23,
+            "levelRaw": "23",
+            "radarValues": [
+              1.0,
+              1.0,
+              1.0,
+              0.259,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-nueel-rendezvous",
+        "folderName": "[Aldo_MX] Nueel - Rendezvous",
+        "title": "Nueel",
+        "artist": "Rendez-Vous",
+        "bpm": {
+          "display": "148",
+          "min": 148.0,
+          "max": 148.0,
+          "changes": 1,
+          "raw": "0r=148.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 110.347,
+          "sizeBytes": 2650240
+        },
+        "metadata": {
+          "subtitle": "-MPM Creativity Fest 08-",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "SoundTrack",
+          "credit": "Aldo_MX",
+          "music": "Song.mp3",
+          "sampleStart": 21.1,
+          "sampleLength": 7.0,
+          "offset": 0.0,
+          "selectable": "YES",
+          "smaVersion": "b3.1"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy (Aldo_MX)",
+            "difficulty": "Hard",
+            "level": 20,
+            "levelRaw": "20",
+            "radarValues": [
+              0.892,
+              1.0,
+              0.589,
+              0.344,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-rhapsody-emerald-sword-live-full",
+        "folderName": "[Aldo_MX] Rhapsody - Emerald Sword (Live, Full)",
+        "title": "Emerald Sword (Live, Full)",
+        "artist": "Rhapsody",
+        "bpm": {
+          "display": "180",
+          "min": 180.0,
+          "max": 180.0,
+          "changes": 1,
+          "raw": "0r=180.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 303.673,
+          "sizeBytes": 3040941
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.MP3",
+          "sampleStart": 33.473,
+          "sampleLength": 10.0,
+          "offset": 0.0,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy",
+            "difficulty": "Hard",
+            "level": 16,
+            "levelRaw": "16",
+            "radarValues": [
+              1.0,
+              1.0,
+              0.734,
+              0.82,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx-yukihiro-jindo-to-make-the-end-of-battle",
+        "folderName": "[Aldo_MX] Yukihiro Jindo - To Make the End of Battle",
+        "title": "To Make the End of Battle",
+        "artist": "Yukihiro Jindo",
+        "bpm": {
+          "display": "232.4",
+          "min": 232.4,
+          "max": 232.4,
+          "changes": 1,
+          "raw": "0r=232.400"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 115.348,
+          "sizeBytes": 4621627
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 76.81,
+          "sampleLength": 10.0,
+          "offset": -0.345,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Hard",
+            "difficulty": "Medium",
+            "level": 17,
+            "levelRaw": "17",
+            "radarValues": [
+              0.797,
+              1.0,
+              0.217,
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy",
+            "difficulty": "Hard",
+            "level": 25,
+            "levelRaw": "25",
+            "radarValues": [
+              1.0,
+              1.0,
+              0.936,
+              0.528,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx",
+        "folderName": "[Aldo_MX] オンナのコ♥オトコのコ 【小清水亜美,能登麻美子】",
+        "title": "Onna no Ko ♥ Otoko no Ko",
+        "artist": "Ami Koshimizu & Mamiko Noto",
+        "bpm": {
+          "display": "81.027",
+          "min": 81.027,
+          "max": 81.027,
+          "changes": 1,
+          "raw": "0r=81.027"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 79.955,
+          "sizeBytes": 1919071
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 3.147,
+          "sampleLength": 10.0,
+          "offset": 0.115,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "",
+            "difficulty": "Hard",
+            "level": 12,
+            "levelRaw": "12",
+            "radarValues": [
+              0.539,
+              0.519,
+              0.0,
+              0.05,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aldo-mx",
+        "folderName": "[Aldo_MX] 二人は忘れちゃう 【小清水亜美,能登麻美子】",
+        "title": "二人は忘れちゃう 【小清水亜美,能登麻美子】",
+        "artist": "小清水亜美,能登麻美子",
+        "bpm": {
+          "display": "90",
+          "min": 90.0,
+          "max": 90.0,
+          "changes": 1,
+          "raw": "0r=90.000"
+        },
+        "audio": {
+          "file": "SONG.mp3",
+          "durationSeconds": 94.485,
+          "sizeBytes": 3780736
+        },
+        "metadata": {
+          "subtitle": "",
+          "titleTranslit": "",
+          "artistTranslit": "",
+          "genre": "",
+          "credit": "Aldo_MX",
+          "music": "SONG.mp3",
+          "sampleStart": 64.0,
+          "sampleLength": 7.0,
+          "offset": 0.0,
+          "selectable": "YES",
+          "smaVersion": "1.0.0"
+        },
+        "chartSources": [
+          "STEPS.sma"
+        ],
+        "steps": [
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Normal",
+            "difficulty": "Easy",
+            "level": 3,
+            "levelRaw": "3",
+            "radarValues": [
+              0.24,
+              0.264,
+              0.116,
+              0.254,
+              0.661
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Hard",
+            "difficulty": "Medium",
+            "level": 8,
+            "levelRaw": "8",
+            "radarValues": [
+              0.404,
+              0.354,
+              0.0,
+              0.434,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-single",
+            "styleIsKnown": true,
+            "description": "Crazy",
+            "difficulty": "Hard",
+            "level": 15,
+            "levelRaw": "15",
+            "radarValues": [
+              0.417,
+              0.374,
+              0.021,
+              0.466,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-double",
+            "styleIsKnown": true,
+            "description": "Full Double",
+            "difficulty": "Medium",
+            "level": 10,
+            "levelRaw": "10",
+            "radarValues": [
+              0.511,
+              0.559,
+              0.021,
+              0.847,
+              0.9
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-double",
+            "styleIsKnown": true,
+            "description": "Nightmare (No Mines)",
+            "difficulty": "Hard",
+            "level": 17,
+            "levelRaw": "17",
+            "radarValues": [
+              0.434,
+              0.374,
+              0.053,
+              0.572,
+              1.0
+            ]
+          },
+          {
+            "sourceFile": "STEPS.sma",
+            "style": "pump-double",
+            "styleIsKnown": true,
+            "description": "Nightmare",
+            "difficulty": "Challenge",
+            "level": 20,
+            "levelRaw": "20",
+            "radarValues": [
+              0.434,
+              0.379,
+              0.053,
+              0.572,
+              1.0
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
