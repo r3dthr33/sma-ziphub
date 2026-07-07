@@ -218,6 +218,7 @@ h2 {
 }
 
 .metrics-ladder,
+.latest-pack-list,
 .chart-stack,
 .filter-panel,
 .song-wheel,
@@ -228,6 +229,11 @@ h2 {
   border-radius: var(--radius);
   background: var(--panel);
   box-shadow: 0 18px 72px rgba(0, 0, 0, 0.24);
+}
+
+.summary-column {
+  display: grid;
+  gap: 14px;
 }
 
 .metrics-ladder {
@@ -285,6 +291,61 @@ h2 {
   line-height: 1.08;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.latest-pack-list {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.latest-pack-list h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.04rem;
+}
+
+.latest-pack-list > div {
+  display: grid;
+  gap: 7px;
+}
+
+.latest-pack-list button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(120px, auto);
+  gap: 10px;
+  align-items: center;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid rgba(125, 242, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.035);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.latest-pack-list button:hover,
+.latest-pack-list button:focus-visible {
+  border-color: var(--line-strong);
+  background: rgba(125, 242, 255, 0.075);
+}
+
+.latest-pack-list span,
+.latest-pack-list small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.latest-pack-list span {
+  color: var(--text);
+  font-weight: 900;
+}
+
+.latest-pack-list small {
+  color: var(--muted);
+  text-align: right;
 }
 
 .chart-stack {
@@ -831,7 +892,7 @@ select option {
 
 .simfile-chart {
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr) 150px;
+  grid-template-columns: 72px minmax(0, 1fr) 112px minmax(120px, 0.7fr);
   gap: 10px;
   align-items: center;
   min-height: 34px;
@@ -851,11 +912,17 @@ select option {
   white-space: nowrap;
 }
 
-.simfile-chart small {
+.simfile-chart small,
+.simfile-chart em {
   color: var(--muted);
+  font-style: normal;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.simfile-chart em {
+  color: var(--muted-strong);
 }
 
 .group-strip {
@@ -1129,6 +1196,15 @@ details p {
     min-height: 0;
   }
 
+  .latest-pack-list button {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .latest-pack-list small {
+    text-align: left;
+  }
+
   .level-row,
   .style-row {
     grid-template-columns: minmax(86px, 0.5fr) minmax(92px, 1fr) 42px;
@@ -1243,15 +1319,16 @@ details p {
   }
 
   .simfile-chart {
-    grid-template-columns: 54px minmax(0, 1fr);
+    grid-template-columns: 54px minmax(0, 1fr) 72px minmax(72px, 0.72fr);
     gap: 6px;
     min-height: 32px;
     padding: 7px 8px;
     font-size: 0.8rem;
   }
 
-  .simfile-chart small {
-    grid-column: 2;
+  .simfile-chart small,
+  .simfile-chart em {
+    font-size: 0.72rem;
   }
 
   .title-qr {

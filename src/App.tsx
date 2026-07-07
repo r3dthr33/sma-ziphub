@@ -78,7 +78,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.26</strong>
+            <strong>v0.0.27</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -177,17 +177,34 @@ function Summary({
       value: formatDuration(stats.longestAudio.duration),
     },
   ];
+  const latestPacks = [...packs].slice(-10).reverse();
 
   return (
     <section className="summary-grid page-section">
-      <div className="metrics-ladder">
-        {highlights.map((highlight) => (
-          <button className="metric-row" key={highlight.label} onClick={() => onOpenPack(highlight.pack.id)} type="button">
-            <span>{highlight.label}</span>
-            <strong>{highlight.pack.name}</strong>
-            <em>{highlight.value}</em>
-          </button>
-        ))}
+      <div className="summary-column">
+        <div className="metrics-ladder">
+          {highlights.map((highlight) => (
+            <button className="metric-row" key={highlight.label} onClick={() => onOpenPack(highlight.pack.id)} type="button">
+              <span>{highlight.label}</span>
+              <strong>{highlight.pack.name}</strong>
+              <em>{highlight.value}</em>
+            </button>
+          ))}
+        </div>
+
+        <div className="latest-pack-list">
+          <h2>Latest packs uploaded</h2>
+          <div>
+            {latestPacks.map((pack) => (
+              <button key={pack.id} onClick={() => onOpenPack(pack.id)} type="button">
+                <span>{pack.name}</span>
+                <small>
+                  {pack.author} - {pack.songs.length} simfiles
+                </small>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="chart-stack">
@@ -575,7 +592,8 @@ function SimfileRow({ song }: { song: SongRecord }) {
             <span className="simfile-chart" key={`${song.id}-${chart.style}-${chart.label}-${chart.level}-${index}`}>
               <strong>Lv {chart.level}</strong>
               <span>{chart.label}</span>
-              <small>{chart.style} - {chart.stepmaker}</small>
+              <small>{chart.style}</small>
+              <em>{chart.stepmaker}</em>
             </span>
           ))}
         </div>
