@@ -476,6 +476,23 @@ label {
   color: var(--accent-ink);
 }
 
+.clear-filters-button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted-strong);
+  font: inherit;
+  font-weight: 850;
+}
+
+.clear-filters-button:hover,
+.clear-filters-button:focus-visible {
+  border-color: var(--line-strong);
+  background: rgba(125, 242, 255, 0.085);
+  color: var(--text);
+}
+
 input,
 select {
   width: 100%;

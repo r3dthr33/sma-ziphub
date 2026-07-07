@@ -80,7 +80,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.28</strong>
+            <strong>v0.0.29</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -125,6 +125,13 @@ function App() {
         <Database
           artistFilter={artistFilter}
           artistOptions={artistOptions}
+          clearFilters={() => {
+            setQuery("");
+            setArtistFilter("");
+            setStepmakerFilter("");
+            setStyleFilters(styles);
+            setSortMode("rating");
+          }}
           filteredPacks={filteredPacks}
           query={query}
           selectedPack={selectedPack}
@@ -255,6 +262,7 @@ function Summary({
 function Database({
   artistFilter,
   artistOptions,
+  clearFilters,
   filteredPacks,
   query,
   selectedPack,
@@ -275,6 +283,7 @@ function Database({
 }: {
   artistFilter: string;
   artistOptions: string[];
+  clearFilters: () => void;
   filteredPacks: PackEntry[];
   query: string;
   selectedPack: PackEntry;
@@ -372,6 +381,10 @@ function Database({
             <option value="title">Pack name</option>
           </select>
         </label>
+
+        <button className="clear-filters-button" onClick={clearFilters} type="button">
+          Clear filters
+        </button>
       </aside>
 
       <div className="song-wheel pack-browser" aria-live="polite">
