@@ -80,7 +80,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.30</strong>
+            <strong>v0.0.31</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -311,7 +311,7 @@ function Database({
           Search packs
           <input
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Pack, song"
+            placeholder="Any keyword"
             type="search"
             value={query}
           />
