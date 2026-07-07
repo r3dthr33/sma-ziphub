@@ -102,6 +102,11 @@ button {
   color: #99b8c4;
 }
 
+.brand-lockup small b {
+  color: #7df2ff;
+  font-weight: 850;
+}
+
 .nav-tabs {
   display: flex;
   gap: 8px;

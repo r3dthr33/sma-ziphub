@@ -63,7 +63,9 @@ function App() {
           <span className="brand-mark">AMX</span>
           <span>
             <strong>SMAMX Vault</strong>
-            <small>{packs.length} pack database</small>
+            <small>
+              {packs.length} pack database <b>v0.0.1</b>
+            </small>
           </span>
         </button>
 
