@@ -129,6 +129,7 @@ def parse_notes(text: str, source_name: str) -> list[dict[str, object]]:
             "sourceFile": source_name,
             "style": style,
             "styleIsKnown": style in STEP_TYPES,
+            "stepmaker": description,
             "description": description,
             "difficulty": difficulty,
             "level": parse_int(meter_text),
@@ -150,6 +151,7 @@ def parse_ucs_chart(path: Path) -> dict[str, object]:
         "sourceFile": path.name,
         "style": style,
         "styleIsKnown": style in STEP_TYPES,
+        "stepmaker": "",
         "description": name,
         "difficulty": "",
         "level": parse_int(level_raw),
@@ -246,6 +248,10 @@ def build_song_record(song_dir: Path, group_name: str) -> dict[str, object]:
         charts.extend(parse_notes(text, chart_file.name))
 
     bpm = bpm_summary(tags.get("BPMS", "")) or display_bpm_summary(tags.get("DISPLAYBPM", ""))
+    stepmaker_fallback = tags.get("CREDIT", "").strip() or "Unknown StepMaker"
+    for chart in charts:
+        if not str(chart.get("stepmaker", "")).strip():
+            chart["stepmaker"] = stepmaker_fallback
     return {
         "id": slugify(song_dir.name),
         "groupName": group_name,
@@ -277,6 +283,19 @@ def slugify(value: str) -> str:
     return slug.strip("-") or "song"
 
 
+def infer_pack_author(pack_dir: Path, songs: list[dict[str, object]]) -> str:
+    credits: dict[str, int] = {}
+    for song in songs:
+        metadata = song.get("metadata", {})
+        credit = metadata.get("credit", "") if isinstance(metadata, dict) else ""
+        credit = str(credit).strip()
+        if credit:
+            credits[credit] = credits.get(credit, 0) + 1
+    if not credits:
+        return "Unknown author"
+    return sorted(credits.items(), key=lambda item: (-item[1], item[0].lower()))[0][0]
+
+
 def build_pack_record(pack_dir: Path) -> dict[str, object]:
     songs = [
         build_song_record(path, pack_dir.name)
@@ -286,6 +305,7 @@ def build_pack_record(pack_dir: Path) -> dict[str, object]:
     return {
         "id": slugify(pack_dir.name),
         "name": pack_dir.name,
+        "author": infer_pack_author(pack_dir, songs),
         "sourcePath": str(pack_dir),
         "songCount": len(songs),
         "groups": [

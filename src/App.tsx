@@ -64,7 +64,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.24</strong>
+            <strong>v0.0.25</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -320,7 +320,7 @@ function Database({
                   {pack.songs.length} simfiles, {getPackChartCount(pack)} charts
                 </small>
               </span>
-              <em>{getPackStyles(pack).join(", ")}</em>
+              <em>{pack.author} - {getPackStyles(pack).join(", ")}</em>
             </button>
           ))
         )}
@@ -347,6 +347,7 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
           <PackRating pack={pack} />
           <span>SMZIP pack</span>
           <strong>{pack.name}</strong>
+          <small>by {pack.author}</small>
           <small>{pack.songs.length} simfiles included</small>
           <small>{getPackDownloads(pack).toLocaleString()} downloads</small>
         </div>
@@ -489,6 +490,7 @@ function SimfileRow({ song }: { song: SongRecord }) {
       label: step.description || step.difficulty || step.style || "Chart",
       level: step.levelRaw || "?",
       style: step.style,
+      stepmaker: step.stepmaker,
     }))
     .sort((a, b) => Number(b.level) - Number(a.level));
 
@@ -527,7 +529,7 @@ function SimfileRow({ song }: { song: SongRecord }) {
             <span className="simfile-chart" key={`${song.id}-${chart.style}-${chart.label}-${chart.level}-${index}`}>
               <strong>Lv {chart.level}</strong>
               <span>{chart.label}</span>
-              <small>{chart.style}</small>
+              <small>{chart.style} - {chart.stepmaker}</small>
             </span>
           ))}
         </div>

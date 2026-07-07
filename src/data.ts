@@ -9,6 +9,7 @@ export const packs: PackRecord[] =
         {
           id: slugify(catalog.pack.name),
           name: catalog.pack.name,
+          author: catalog.pack.author ?? "Unknown author",
           sourcePath: catalog.sourcePath,
           songCount: catalog.pack.songCount,
           songs: catalog.pack.songs,

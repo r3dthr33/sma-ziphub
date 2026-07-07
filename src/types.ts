@@ -2,6 +2,7 @@ export type StepChart = {
   sourceFile: string;
   style: string;
   styleIsKnown: boolean;
+  stepmaker: string;
   description: string;
   difficulty: string;
   level: number | null;
@@ -47,6 +48,7 @@ export type SongRecord = {
 export type PackRecord = {
   id: string;
   name: string;
+  author: string;
   sourcePath: string;
   songCount: number;
   groups?: Array<{
@@ -66,6 +68,7 @@ export type CatalogDatabase = {
   packs?: PackRecord[];
   pack?: {
     name: string;
+    author?: string;
     songCount: number;
     songs: SongRecord[];
   };
