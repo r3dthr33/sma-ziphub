@@ -80,7 +80,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.33</strong>
+            <strong>v0.0.34</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -305,34 +305,83 @@ function Database({
   const allStylesSelected = styleFilters.length === styles.length;
   const [addingPack, setAddingPack] = useState(false);
   const [newPackSaved, setNewPackSaved] = useState(false);
-  const [newPackError, setNewPackError] = useState("");
   const examplePack = packs.find((pack) => pack.name === "Aldo_MX") ?? packs[packs.length - 1] ?? selectedPack;
   const storedNewPack = readLocalDraft("smamx-new-pack-draft");
-  const [newPackDraft, setNewPackDraft] = useState(() => ({
-    name: storedNewPack?.name ?? `${examplePack.name} copy`,
-    author: storedNewPack?.author ?? examplePack.author,
-    downloadUrl: storedNewPack?.downloadUrl ?? `https://r3dthr33.github.io/sma-ziphub/packs/${examplePack.id}.smzip`,
-    sourcePath: storedNewPack?.sourcePath ?? examplePack.sourcePath,
-    notes: storedNewPack?.notes ?? "",
-    json: storedNewPack?.json ?? JSON.stringify(examplePack, null, 2),
-  }));
+  const [newPackDraft, setNewPackDraft] = useState<PackEntry>(() => {
+    if (storedNewPack?.pack) return storedNewPack.pack;
+    const draft = clonePack(examplePack);
+    draft.id = `${draft.id}-copy`;
+    draft.name = `${draft.name} copy`;
+    return draft;
+  });
+  const [newPackDownloadUrl, setNewPackDownloadUrl] = useState(
+    storedNewPack?.downloadUrl ?? `https://r3dthr33.github.io/sma-ziphub/packs/${examplePack.id}.smzip`,
+  );
+  const [newPackNotes, setNewPackNotes] = useState(storedNewPack?.notes ?? "");
 
-  function updateNewPackDraft(field: keyof typeof newPackDraft, value: string) {
+  function markNewPackChanged() {
     setNewPackSaved(false);
-    setNewPackError("");
+  }
+
+  function updateNewPackField(field: "name" | "author" | "sourcePath", value: string) {
+    markNewPackChanged();
     setNewPackDraft((current) => ({ ...current, [field]: value }));
   }
 
+  function updateNewPackGroup(index: number, field: "name" | "songCount" | "chartCount", value: string) {
+    markNewPackChanged();
+    setNewPackDraft((current) => ({
+      ...current,
+      groups: (current.groups ?? getPackGroups(current)).map((group, groupIndex) =>
+        groupIndex === index
+          ? {
+              ...group,
+              [field]: field === "name" ? value : parseInt(value, 10) || 0,
+            }
+          : group,
+      ),
+    }));
+  }
+
+  function updateNewPackSong(index: number, field: "folderName" | "groupName" | "title" | "artist", value: string) {
+    markNewPackChanged();
+    setNewPackDraft((current) => ({
+      ...current,
+      songs: current.songs.map((song, songIndex) => (songIndex === index ? { ...song, [field]: value } : song)),
+    }));
+  }
+
+  function updateNewPackChart(
+    songIndex: number,
+    chartIndex: number,
+    field: "style" | "description" | "difficulty" | "levelRaw" | "stepmaker",
+    value: string,
+  ) {
+    markNewPackChanged();
+    setNewPackDraft((current) => ({
+      ...current,
+      songs: current.songs.map((song, currentSongIndex) =>
+        currentSongIndex === songIndex
+          ? {
+              ...song,
+              steps: song.steps.map((step, currentChartIndex) =>
+                currentChartIndex === chartIndex
+                  ? {
+                      ...step,
+                      [field]: value,
+                      ...(field === "levelRaw" ? { level: parseInt(value, 10) || null } : {}),
+                    }
+                  : step,
+              ),
+            }
+          : song,
+      ),
+    }));
+  }
+
   function saveNewPackDraft() {
-    try {
-      JSON.parse(newPackDraft.json);
-      window.localStorage.setItem("smamx-new-pack-draft", JSON.stringify(newPackDraft));
-      setNewPackSaved(true);
-      setNewPackError("");
-    } catch {
-      setNewPackSaved(false);
-      setNewPackError("Pack JSON is not valid.");
-    }
+    window.localStorage.setItem("smamx-new-pack-draft", JSON.stringify({ pack: newPackDraft, downloadUrl: newPackDownloadUrl, notes: newPackNotes }));
+    setNewPackSaved(true);
   }
 
   return (
@@ -438,35 +487,128 @@ function Database({
 
                 <label>
                   Pack name
-                  <input onChange={(event) => updateNewPackDraft("name", event.target.value)} value={newPackDraft.name} />
+                  <input onChange={(event) => updateNewPackField("name", event.target.value)} value={newPackDraft.name} />
                 </label>
 
                 <label>
                   Author
-                  <input onChange={(event) => updateNewPackDraft("author", event.target.value)} value={newPackDraft.author} />
+                  <input onChange={(event) => updateNewPackField("author", event.target.value)} value={newPackDraft.author} />
                 </label>
 
                 <label>
                   Download URL
-                  <input onChange={(event) => updateNewPackDraft("downloadUrl", event.target.value)} value={newPackDraft.downloadUrl} />
+                  <input
+                    onChange={(event) => {
+                      markNewPackChanged();
+                      setNewPackDownloadUrl(event.target.value);
+                    }}
+                    value={newPackDownloadUrl}
+                  />
                 </label>
 
                 <label>
                   Source path
-                  <input onChange={(event) => updateNewPackDraft("sourcePath", event.target.value)} value={newPackDraft.sourcePath} />
+                  <input onChange={(event) => updateNewPackField("sourcePath", event.target.value)} value={newPackDraft.sourcePath} />
                 </label>
 
-                <label className="editor-notes">
-                  Full pack JSON
-                  <textarea className="pack-json-editor" onChange={(event) => updateNewPackDraft("json", event.target.value)} value={newPackDraft.json} />
-                </label>
+                <div className="detail-grid editor-detail-grid">
+                  <span>
+                    Simfiles
+                    <strong>{newPackDraft.songs.length}</strong>
+                  </span>
+                  <span>
+                    Charts
+                    <strong>{getPackChartCount(newPackDraft)}</strong>
+                  </span>
+                  <span>
+                    Level range
+                    <strong>{getPackLevelRange(newPackDraft)}</strong>
+                  </span>
+                  <span>
+                    Groups
+                    <strong>{newPackDraft.groups?.length ?? 1}</strong>
+                  </span>
+                </div>
+
+                <section className="editor-groups">
+                  <h3>Groups included</h3>
+                  {(newPackDraft.groups ?? getPackGroups(newPackDraft)).map((group, index) => (
+                    <div className="editor-group-row" key={`${group.name}-${index}`}>
+                      <label>
+                        Group
+                        <input onChange={(event) => updateNewPackGroup(index, "name", event.target.value)} value={group.name} />
+                      </label>
+                      <label>
+                        Simfiles
+                        <input onChange={(event) => updateNewPackGroup(index, "songCount", event.target.value)} value={group.songCount} />
+                      </label>
+                      <label>
+                        Charts
+                        <input onChange={(event) => updateNewPackGroup(index, "chartCount", event.target.value)} value={group.chartCount} />
+                      </label>
+                    </div>
+                  ))}
+                </section>
+
+                <section className="editor-simfiles">
+                  <h3>Simfiles inside</h3>
+                  {newPackDraft.songs.map((song, songIndex) => (
+                    <article className="editor-simfile" key={`${song.id}-${songIndex}`}>
+                      <div className="editor-simfile-fields">
+                        <label>
+                          Folder
+                          <input onChange={(event) => updateNewPackSong(songIndex, "folderName", event.target.value)} value={song.folderName} />
+                        </label>
+                        <label>
+                          Group
+                          <input onChange={(event) => updateNewPackSong(songIndex, "groupName", event.target.value)} value={song.groupName ?? ""} />
+                        </label>
+                        <label>
+                          Title
+                          <input onChange={(event) => updateNewPackSong(songIndex, "title", event.target.value)} value={song.title} />
+                        </label>
+                        <label>
+                          Artist
+                          <input onChange={(event) => updateNewPackSong(songIndex, "artist", event.target.value)} value={song.artist} />
+                        </label>
+                      </div>
+
+                      <div className="editor-chart-list">
+                        {song.steps.map((step, chartIndex) => (
+                          <div className="editor-chart-row" key={`${song.id}-${step.sourceFile}-${chartIndex}`}>
+                            <label>
+                              Lv
+                              <input onChange={(event) => updateNewPackChart(songIndex, chartIndex, "levelRaw", event.target.value)} value={step.levelRaw} />
+                            </label>
+                            <label>
+                              Style
+                              <input onChange={(event) => updateNewPackChart(songIndex, chartIndex, "style", event.target.value)} value={step.style} />
+                            </label>
+                            <label>
+                              Chart
+                              <input onChange={(event) => updateNewPackChart(songIndex, chartIndex, "description", event.target.value)} value={step.description} />
+                            </label>
+                            <label>
+                              StepMaker
+                              <input onChange={(event) => updateNewPackChart(songIndex, chartIndex, "stepmaker", event.target.value)} value={step.stepmaker} />
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </article>
+                  ))}
+                </section>
 
                 <label className="editor-notes">
                   Notes
-                  <textarea onChange={(event) => updateNewPackDraft("notes", event.target.value)} value={newPackDraft.notes} />
+                  <textarea
+                    onChange={(event) => {
+                      markNewPackChanged();
+                      setNewPackNotes(event.target.value);
+                    }}
+                    value={newPackNotes}
+                  />
                 </label>
-
-                {newPackError && <strong className="draft-error">{newPackError}</strong>}
 
                 <button className="save-draft-button" onClick={saveNewPackDraft} type="button">
                   Save new pack draft
@@ -474,7 +616,7 @@ function Database({
               </section>
             )}
 
-            {filteredPacks.length === 0 ? (
+            {addingPack ? null : filteredPacks.length === 0 ? (
               <div className="empty-state">
                 <strong>No packs found</strong>
                 <span>Select at least one style or try another search.</span>
@@ -693,11 +835,16 @@ function getPackDownloads(pack: PackEntry) {
   return seededScore(pack.id, 800, 9200);
 }
 
+function clonePack(pack: PackEntry): PackEntry {
+  return JSON.parse(JSON.stringify(pack));
+}
+
 function readPackDraft(key: string): { name?: string; author?: string; downloadUrl?: string; sourcePath?: string; notes?: string } | null {
   return readLocalDraft(key);
 }
 
 function readLocalDraft(key: string): {
+  pack?: PackEntry;
   name?: string;
   author?: string;
   downloadUrl?: string;

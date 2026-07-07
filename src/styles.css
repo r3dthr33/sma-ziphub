@@ -761,7 +761,10 @@ select option {
 
 .pack-editor > div:first-child,
 .pack-editor .editor-notes,
-.pack-editor .save-draft-button {
+.pack-editor .save-draft-button,
+.pack-editor .editor-detail-grid,
+.pack-editor .editor-groups,
+.pack-editor .editor-simfiles {
   grid-column: 1 / -1;
 }
 
@@ -781,17 +784,67 @@ select option {
     rgba(7, 17, 19, 0.62);
 }
 
-.pack-json-editor {
-  min-height: 260px;
-  font-family: Consolas, "SFMono-Regular", monospace;
-  font-size: 0.82rem;
-  line-height: 1.45;
+.editor-detail-grid {
+  margin: 2px 0;
 }
 
-.draft-error {
-  grid-column: 1 / -1;
-  color: #ff9ebf;
-  font-size: 0.9rem;
+.editor-groups,
+.editor-simfiles,
+.editor-simfile,
+.editor-chart-list {
+  display: grid;
+  gap: 10px;
+}
+
+.editor-groups h3,
+.editor-simfiles h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.editor-group-row,
+.editor-simfile-fields,
+.editor-chart-row {
+  display: grid;
+  gap: 8px;
+}
+
+.editor-group-row {
+  grid-template-columns: minmax(0, 1fr) 120px 120px;
+}
+
+.editor-simfile {
+  padding: 10px;
+  border: 1px solid rgba(125, 242, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.editor-simfile-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.editor-chart-list {
+  margin-top: 8px;
+}
+
+.editor-chart-row {
+  grid-template-columns: 64px minmax(120px, 0.7fr) minmax(0, 1fr) minmax(120px, 0.8fr);
+  align-items: end;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(7, 17, 19, 0.58);
+}
+
+.editor-chart-row label {
+  gap: 4px;
+  font-size: 0.76rem;
+}
+
+.editor-chart-row input {
+  min-height: 36px;
+  padding: 0 9px;
 }
 
 textarea {
@@ -1340,6 +1393,12 @@ details p {
   }
 
   .pack-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-group-row,
+  .editor-simfile-fields,
+  .editor-chart-row {
     grid-template-columns: 1fr;
   }
 
