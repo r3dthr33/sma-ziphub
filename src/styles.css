@@ -89,22 +89,31 @@ button {
   border-radius: 6px;
   color: #081116;
   background: #7df2ff;
-  font-weight: 950;
   letter-spacing: 0;
 }
 
-.brand-lockup strong,
+.brand-mark strong,
+.brand-mark small,
+.brand-lockup > span:last-child strong,
 .brand-lockup small {
   display: block;
 }
 
-.brand-lockup small {
-  color: #99b8c4;
+.brand-mark strong {
+  font-size: 0.92rem;
+  font-weight: 950;
+  line-height: 1;
 }
 
-.brand-lockup small b {
-  color: #7df2ff;
-  font-weight: 850;
+.brand-mark small {
+  color: #061015;
+  font-size: 0.57rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.brand-lockup small {
+  color: #99b8c4;
 }
 
 .nav-tabs {
@@ -539,11 +548,16 @@ select option {
 
 .simfile-summary {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto auto;
   gap: 16px;
   align-items: center;
   min-height: 104px;
   padding: 18px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #eef7ff;
+  text-align: left;
 }
 
 .simfile-summary span,
@@ -567,7 +581,8 @@ select option {
 }
 
 .simfile-summary b,
-.simfile-summary i {
+.simfile-summary i,
+.simfile-summary u {
   display: grid;
   min-width: 76px;
   min-height: 48px;
@@ -575,6 +590,7 @@ select option {
   border-radius: 6px;
   padding: 0 10px;
   font-weight: 850;
+  text-decoration: none;
 }
 
 .simfile-summary b {
@@ -584,6 +600,19 @@ select option {
 
 .simfile-summary i {
   background: rgba(255, 255, 255, 0.06);
+}
+
+.simfile-summary u {
+  background: #7df2ff;
+  color: #061015;
+}
+
+.simfile-summary:hover {
+  background: rgba(125, 242, 255, 0.08);
+}
+
+.simfile-summary[aria-expanded="true"] {
+  background: rgba(125, 242, 255, 0.12);
 }
 
 .group-strip {
