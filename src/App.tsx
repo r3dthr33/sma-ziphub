@@ -110,13 +110,6 @@ function App() {
 function Summary({ stats, onOpenDatabase }: { stats: ReturnType<typeof buildStats>; onOpenDatabase: () => void }) {
   return (
     <section className="summary-grid page-section">
-      <div className="stat-stage">
-        <div className="pulse-ring" />
-        <p>Pack telemetry</p>
-        <strong>{stats.packName}</strong>
-        <span>Each SMZIP entry opens to show its simfiles, with one QR for the whole download.</span>
-      </div>
-
       <div className="metrics-ladder">
         {[
           ["Most downloaded pack", stats.mostDownloaded.title, `${stats.mostDownloaded.downloads.toLocaleString()} downloads`],
