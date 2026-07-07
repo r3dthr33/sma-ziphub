@@ -351,6 +351,14 @@ select option {
   max-height: 720px;
   overflow: auto;
   padding: 12px;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to bottom, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+}
+
+.song-wheel::-webkit-scrollbar,
+.simfile-list::-webkit-scrollbar,
+.level-chip-list::-webkit-scrollbar {
+  display: none;
 }
 
 .pack-browser {
@@ -515,8 +523,11 @@ select option {
 .simfile-list {
   display: grid;
   gap: 16px;
+  max-height: min(760px, 72vh);
   overflow: auto;
   padding: 16px;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to bottom, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
 }
 
 .simfile-list h2 {
@@ -532,6 +543,29 @@ select option {
   border: 1px solid rgba(125, 242, 255, 0.2);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.065);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.simfile-card:hover,
+.simfile-card:focus-visible,
+.simfile-card[aria-expanded="true"] {
+  border-color: rgba(125, 242, 255, 0.46);
+  background: rgba(125, 242, 255, 0.1);
+}
+
+.simfile-card:focus-visible {
+  outline: 3px solid rgba(125, 242, 255, 0.22);
+  outline-offset: 2px;
+}
+
+.simfile-card:active {
+  transform: translateY(1px);
 }
 
 .simfile-card-header {
@@ -566,8 +600,7 @@ select option {
 }
 
 .simfile-card-stats span,
-.simfile-card-stats strong,
-.simfile-card-stats button {
+.simfile-card-stats strong {
   display: grid;
   min-height: 36px;
   place-items: center;
@@ -577,19 +610,9 @@ select option {
 }
 
 .simfile-card-stats span,
-.simfile-card-stats button {
-  border: 0;
+.simfile-card-stats span {
   color: #b9d0d9;
   background: rgba(255, 255, 255, 0.055);
-}
-
-.simfile-card-stats button {
-  cursor: pointer;
-}
-
-.simfile-card-stats button:hover {
-  color: #eef7ff;
-  background: rgba(125, 242, 255, 0.14);
 }
 
 .simfile-card-stats strong {
@@ -604,6 +627,8 @@ select option {
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 4px;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 28px), transparent 100%);
 }
 
 .chart-level-chip {
@@ -885,8 +910,7 @@ details p {
   }
 
   .simfile-card-stats span,
-  .simfile-card-stats strong,
-  .simfile-card-stats button {
+  .simfile-card-stats strong {
     min-height: 32px;
     padding: 0 6px;
     font-size: 0.78rem;

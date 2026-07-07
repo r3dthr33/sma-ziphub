@@ -61,7 +61,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.4</strong>
+            <strong>v0.0.5</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -331,9 +331,9 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
 
 function SimfileRow({ song }: { song: SongRecord }) {
   const [chartsVisible, setChartsVisible] = useState(false);
-  const topChart = getTopChart(song);
   const displayTitle = getSongDisplayTitle(song);
   const displayArtist = song.metadata.artistTranslit || song.artist || getSongDisplayArtist(song);
+  const levelRange = getLevelRange(song);
   const chartLevels = song.steps
     .map((step) => ({
       label: step.description || step.difficulty || step.style || "Chart",
@@ -343,7 +343,19 @@ function SimfileRow({ song }: { song: SongRecord }) {
     .sort((a, b) => Number(b.level) - Number(a.level));
 
   return (
-    <article className="simfile-card">
+    <article
+      aria-expanded={chartsVisible}
+      className="simfile-card"
+      onClick={() => setChartsVisible((visible) => !visible)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          setChartsVisible((visible) => !visible);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+    >
       <header className="simfile-card-header">
         <div>
           <p>{song.groupName || "Group"}</p>
@@ -352,10 +364,8 @@ function SimfileRow({ song }: { song: SongRecord }) {
         </div>
         <div className="simfile-card-stats">
           <span>BPM {song.bpm?.display ?? "?"}</span>
-          <strong>{topChart ? `Lv ${topChart.level}` : getLevelRange(song)}</strong>
-          <button onClick={() => setChartsVisible((visible) => !visible)} type="button">
-            {chartsVisible ? "Hide" : `${song.steps.length} charts`}
-          </button>
+          <strong>{levelRange === "Unrated" ? levelRange : `Lv ${levelRange}`}</strong>
+          <span>{chartsVisible ? "Hide charts" : `${song.steps.length} charts`}</span>
         </div>
       </header>
 
