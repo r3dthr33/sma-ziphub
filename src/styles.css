@@ -356,8 +356,7 @@ select option {
 }
 
 .song-wheel::-webkit-scrollbar,
-.simfile-list::-webkit-scrollbar,
-.level-chip-list::-webkit-scrollbar {
+.simfile-stack::-webkit-scrollbar {
   display: none;
 }
 
@@ -520,157 +519,177 @@ select option {
   font-size: 1.2rem;
 }
 
-.simfile-list {
+.pack-simfiles {
   display: grid;
-  gap: 16px;
-  max-height: min(760px, 72vh);
-  overflow: auto;
+  gap: 14px;
   padding: 16px;
-  scrollbar-width: none;
-  mask-image: linear-gradient(to bottom, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
 }
 
-.simfile-list h2 {
-  margin: 0 0 4px;
+.pack-simfiles h2 {
+  margin: 0;
   font-size: 1.35rem;
 }
 
-.simfile-card {
+.simfile-stack {
   display: grid;
-  gap: 8px;
-  min-height: 0;
-  border: 1px solid rgba(125, 242, 255, 0.2);
+  gap: 10px;
+  max-height: min(760px, 72vh);
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 34px), transparent 100%);
+}
+
+.simfile-entry {
+  display: grid;
+  border: 1px solid rgba(125, 242, 255, 0.22);
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.065);
-  color: inherit;
+  background: rgba(255, 255, 255, 0.055);
   overflow: hidden;
-  transition:
-    background 160ms ease,
-    border-color 160ms ease;
 }
 
-.simfile-card:hover,
-.simfile-card[aria-expanded="true"] {
-  border-color: rgba(125, 242, 255, 0.46);
-  background: rgba(125, 242, 255, 0.1);
+.simfile-entry[aria-expanded="true"] {
+  border-color: rgba(125, 242, 255, 0.5);
+  background: rgba(125, 242, 255, 0.09);
 }
 
-.simfile-card-summary {
+.simfile-trigger {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, max-content);
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) auto 54px;
+  gap: 14px;
   align-items: center;
   width: 100%;
-  min-height: 76px;
+  min-height: 86px;
   padding: 12px 14px;
   border: 0;
   background: transparent;
-  color: inherit;
+  color: #eef7ff;
   cursor: pointer;
   font: inherit;
   text-align: left;
 }
 
-.simfile-card-summary:focus-visible {
-  outline: 3px solid rgba(125, 242, 255, 0.22);
+.simfile-trigger:hover {
+  background: rgba(125, 242, 255, 0.06);
+}
+
+.simfile-trigger:focus-visible {
+  outline: 3px solid rgba(125, 242, 255, 0.25);
   outline-offset: -3px;
 }
 
-.simfile-card-summary:active {
+.simfile-trigger:active {
   transform: translateY(1px);
 }
 
-.simfile-card-titleblock {
+.simfile-main {
   display: grid;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
 }
 
-.simfile-card-titleblock span {
+.simfile-main strong,
+.simfile-main small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.simfile-main strong {
+  color: #eef7ff;
+  font-size: 1.12rem;
+  line-height: 1.1;
+}
+
+.simfile-main small {
   color: #99b8c4;
   line-height: 1.15;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.simfile-card-titleblock strong {
-  color: #eef7ff;
-  font-size: clamp(1rem, 1.6vw, 1.35rem);
-  line-height: 1.12;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.simfile-card-kicker {
-  font-size: 0.78rem;
-  letter-spacing: 0.02em;
-}
-
-.simfile-card-stats {
+.simfile-meta {
   display: grid;
-  grid-template-columns: minmax(132px, auto) minmax(112px, auto) minmax(104px, auto);
+  grid-template-columns: repeat(3, minmax(88px, auto));
   gap: 8px;
-  justify-content: end;
 }
 
-.simfile-card-stats span,
-.simfile-card-stats strong {
+.simfile-meta > span {
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  min-width: 88px;
+  align-content: center;
+  justify-items: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+}
+
+.simfile-meta small {
+  color: #99b8c4;
+  font-size: 0.68rem;
+  line-height: 1;
+}
+
+.simfile-meta strong {
+  color: #dce9ee;
+  font-size: 0.95rem;
+  line-height: 1.05;
+}
+
+.simfile-meta .simfile-level {
+  background: #7df2ff;
+}
+
+.simfile-meta .simfile-level small,
+.simfile-meta .simfile-level strong {
+  color: #061015;
+}
+
+.simfile-cue {
   display: grid;
   min-height: 36px;
   place-items: center;
   border-radius: 6px;
-  padding: 0 10px;
-  white-space: nowrap;
+  background: rgba(8, 17, 22, 0.62);
+  color: #99b8c4;
+  font-size: 0.78rem;
 }
 
-.simfile-card-stats span,
-.simfile-card-stats span {
-  color: #b9d0d9;
-  background: rgba(255, 255, 255, 0.055);
-}
-
-.simfile-card-stats strong {
-  color: #061015;
-  background: #7df2ff;
-}
-
-.level-chip-list {
+.simfile-charts {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(170px, max-content);
-  gap: 8px;
-  overflow-x: auto;
+  gap: 6px;
   padding: 0 14px 12px;
-  scrollbar-width: none;
-  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 28px), transparent 100%);
 }
 
-.chart-level-chip {
+.simfile-chart {
   display: grid;
-  grid-template-columns: auto minmax(90px, 1fr);
-  gap: 4px 8px;
+  grid-template-columns: 72px minmax(0, 1fr) 150px;
+  gap: 10px;
   align-items: center;
-  min-width: 170px;
-  padding: 10px 12px;
+  min-height: 36px;
+  padding: 8px 10px;
   border-radius: 6px;
-  background: rgba(8, 17, 22, 0.72);
+  background: rgba(8, 17, 22, 0.7);
 }
 
-.chart-level-chip strong {
+.simfile-chart strong {
   color: #7df2ff;
 }
 
-.chart-level-chip em {
+.simfile-chart span {
   color: #eef7ff;
-  font-style: normal;
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.chart-level-chip small {
-  grid-column: 2;
+.simfile-chart small {
   color: #99b8c4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .group-strip {
@@ -850,8 +869,6 @@ details p {
   .topbar,
   .metric-row,
   .song-strip,
-  .simfile-card-summary,
-  .simfile-card-stats,
   .qr-panel {
     grid-template-columns: 1fr;
   }
@@ -894,57 +911,75 @@ details p {
     grid-template-columns: 1fr;
   }
 
-  .simfile-list {
+  .pack-simfiles {
     gap: 10px;
     padding: 10px;
   }
 
-  .simfile-list h2 {
+  .pack-simfiles h2 {
     font-size: 1.1rem;
   }
 
-  .simfile-card {
+  .simfile-stack {
     gap: 6px;
   }
 
-  .simfile-card-summary {
+  .simfile-trigger {
+    grid-template-columns: 1fr;
     gap: 8px;
     min-height: 0;
     padding: 10px;
   }
 
-  .simfile-card-titleblock {
+  .simfile-main {
     gap: 2px;
   }
 
-  .simfile-card-titleblock span {
+  .simfile-main small {
     font-size: 0.78rem;
   }
 
-  .simfile-card-titleblock strong {
+  .simfile-main strong {
     font-size: 0.98rem;
   }
 
-  .simfile-card-stats {
+  .simfile-meta {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
   }
 
-  .simfile-card-stats span,
-  .simfile-card-stats strong {
+  .simfile-meta > span {
     min-height: 32px;
     padding: 0 6px;
+  }
+
+  .simfile-meta small {
+    display: none;
+  }
+
+  .simfile-meta strong,
+  .simfile-cue {
     font-size: 0.78rem;
   }
 
-  .level-chip-list {
+  .simfile-cue {
+    min-height: 30px;
+  }
+
+  .simfile-charts {
     padding: 0 10px 10px;
   }
 
-  .chart-level-chip {
-    min-width: 150px;
-    padding: 8px;
+  .simfile-chart {
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 6px;
+    min-height: 32px;
+    padding: 7px 8px;
     font-size: 0.8rem;
+  }
+
+  .simfile-chart small {
+    grid-column: 2;
   }
 
   .title-qr {

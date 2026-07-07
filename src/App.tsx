@@ -61,7 +61,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.6</strong>
+            <strong>v0.0.7</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -319,12 +319,14 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
         </div>
       </div>
 
-      <div className="simfile-list">
+      <section className="pack-simfiles">
         <h2>Simfiles inside</h2>
-        {pack.songs.map((song) => (
-          <SimfileRow key={song.id} song={song} />
-        ))}
-      </div>
+        <div className="simfile-stack">
+          {pack.songs.map((song) => (
+            <SimfileRow key={song.id} song={song} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
@@ -343,32 +345,43 @@ function SimfileRow({ song }: { song: SongRecord }) {
     .sort((a, b) => Number(b.level) - Number(a.level));
 
   return (
-    <article className="simfile-card" aria-expanded={chartsVisible}>
+    <article className="simfile-entry" aria-expanded={chartsVisible}>
       <button
         aria-expanded={chartsVisible}
-        className="simfile-card-summary"
+        className="simfile-trigger"
         onClick={() => setChartsVisible((visible) => !visible)}
         type="button"
       >
-        <div className="simfile-card-titleblock">
-          <span className="simfile-card-kicker">{song.groupName || "Group"}</span>
+        <span className="simfile-main">
+          <small>{song.groupName || "Group"}</small>
           <strong>{displayTitle}</strong>
-          <span>{displayArtist || "Unknown artist"}</span>
-        </div>
+          <small>{displayArtist || "Unknown artist"}</small>
+        </span>
 
-        <div className="simfile-card-stats">
-          <span>BPM {song.bpm?.display ?? "?"}</span>
-          <strong>{levelRange === "Unrated" ? levelRange : `Lv ${levelRange}`}</strong>
-          <span>{chartsVisible ? "Hide charts" : `${song.steps.length} charts`}</span>
-        </div>
+        <span className="simfile-meta">
+          <span>
+            <small>BPM</small>
+            <strong>{song.bpm?.display ?? "?"}</strong>
+          </span>
+          <span className="simfile-level">
+            <small>LV</small>
+            <strong>{levelRange === "Unrated" ? "?" : levelRange}</strong>
+          </span>
+          <span>
+            <small>Charts</small>
+            <strong>{song.steps.length}</strong>
+          </span>
+        </span>
+
+        <span className="simfile-cue">{chartsVisible ? "Hide" : "View"}</span>
       </button>
 
       {chartsVisible && (
-        <div className="level-chip-list" aria-label={`Chart levels for ${displayTitle}`}>
+        <div className="simfile-charts" aria-label={`Chart levels for ${displayTitle}`}>
           {chartLevels.map((chart, index) => (
-            <span className="chart-level-chip" key={`${song.id}-${chart.style}-${chart.label}-${chart.level}-${index}`}>
+            <span className="simfile-chart" key={`${song.id}-${chart.style}-${chart.label}-${chart.level}-${index}`}>
               <strong>Lv {chart.level}</strong>
-              <em>{chart.label}</em>
+              <span>{chart.label}</span>
               <small>{chart.style}</small>
             </span>
           ))}
