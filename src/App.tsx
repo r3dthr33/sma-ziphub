@@ -30,6 +30,8 @@ const sections: Array<{ id: Section; label: string }> = [
 function App() {
   const [activeSection, setActiveSection] = useState<Section>("summary");
   const [query, setQuery] = useState("");
+  const [artistFilter, setArtistFilter] = useState("");
+  const [stepmakerFilter, setStepmakerFilter] = useState("");
   const [styleFilters, setStyleFilters] = useState<string[]>(() => getAllStyles(songs));
   const [sortMode, setSortMode] = useState<SortMode>("rating");
   const [selectedPackId, setSelectedPackId] = useState(packs[0]?.id ?? "");
@@ -40,18 +42,30 @@ function App() {
 
   const filteredPacks = useMemo(() => {
     const cleanQuery = query.trim().toLowerCase();
+    const cleanArtist = artistFilter.trim().toLowerCase();
+    const cleanStepmaker = stepmakerFilter.trim().toLowerCase();
     return packs
       .filter((pack) => {
         const songText = pack.songs.map((song) => `${song.title} ${song.artist} ${song.folderName}`).join(" ");
         const text = `${pack.name} ${songText}`.toLowerCase();
+        const artistText = pack.songs
+          .map((song) => `${song.artist} ${song.metadata.artistTranslit}`)
+          .join(" ")
+          .toLowerCase();
+        const stepmakerText = pack.songs
+          .flatMap((song) => song.steps.map((step) => step.stepmaker))
+          .join(" ")
+          .toLowerCase();
         const matchesQuery = !cleanQuery || text.includes(cleanQuery);
+        const matchesArtist = !cleanArtist || artistText.includes(cleanArtist);
+        const matchesStepmaker = !cleanStepmaker || stepmakerText.includes(cleanStepmaker);
         const matchesStyle =
           styleFilters.length > 0 &&
           pack.songs.some((song) => song.steps.some((step) => styleFilters.includes(step.style)));
-        return matchesQuery && matchesStyle;
+        return matchesQuery && matchesArtist && matchesStepmaker && matchesStyle;
       })
       .sort((a, b) => sortPacks(a, b, sortMode));
-  }, [query, sortMode, styleFilters]);
+  }, [artistFilter, query, sortMode, stepmakerFilter, styleFilters]);
 
   const stats = useMemo(() => buildStats(songs), []);
   const visibleCounters = useMemo(
@@ -64,7 +78,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.25</strong>
+            <strong>v0.0.26</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -107,14 +121,18 @@ function App() {
 
       {activeSection === "database" && (
         <Database
+          artistFilter={artistFilter}
           filteredPacks={filteredPacks}
           query={query}
           selectedPack={selectedPack}
+          setArtistFilter={setArtistFilter}
           setQuery={setQuery}
           setSelectedPackId={setSelectedPackId}
+          setStepmakerFilter={setStepmakerFilter}
           setViewingPack={setViewingPack}
           setSortMode={setSortMode}
           sortMode={sortMode}
+          stepmakerFilter={stepmakerFilter}
           styleFilters={styleFilters}
           styles={styles}
           toggleAllStyleFilters={() => setStyleFilters((current) => (current.length === styles.length ? [] : styles))}
@@ -209,28 +227,36 @@ function Summary({
 }
 
 function Database({
+  artistFilter,
   filteredPacks,
   query,
   selectedPack,
+  setArtistFilter,
   setQuery,
   setSelectedPackId,
+  setStepmakerFilter,
   setViewingPack,
   setSortMode,
   sortMode,
+  stepmakerFilter,
   styleFilters,
   styles,
   toggleAllStyleFilters,
   toggleStyleFilter,
   viewingPack,
 }: {
+  artistFilter: string;
   filteredPacks: PackEntry[];
   query: string;
   selectedPack: PackEntry;
+  setArtistFilter: (value: string) => void;
   setQuery: (value: string) => void;
   setSelectedPackId: (value: string) => void;
+  setStepmakerFilter: (value: string) => void;
   setViewingPack: (value: boolean) => void;
   setSortMode: (value: SortMode) => void;
   sortMode: SortMode;
+  stepmakerFilter: string;
   styleFilters: string[];
   styles: string[];
   toggleAllStyleFilters: () => void;
@@ -246,9 +272,29 @@ function Database({
           Search packs
           <input
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Pack, song, artist"
+            placeholder="Pack, song"
             type="search"
             value={query}
+          />
+        </label>
+
+        <label>
+          Artist
+          <input
+            onChange={(event) => setArtistFilter(event.target.value)}
+            placeholder="Artist name"
+            type="search"
+            value={artistFilter}
+          />
+        </label>
+
+        <label>
+          StepMaker
+          <input
+            onChange={(event) => setStepmakerFilter(event.target.value)}
+            placeholder="StepMaker credit"
+            type="search"
+            value={stepmakerFilter}
           />
         </label>
 

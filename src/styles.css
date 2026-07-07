@@ -1135,10 +1135,40 @@ details p {
     gap: 8px;
   }
 
-  .detail-grid,
   .pack-title-card,
   .title-qr {
     grid-template-columns: 1fr;
+  }
+
+  .detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detail-grid span {
+    min-height: 92px;
+    padding: 10px;
+  }
+
+  .detail-grid strong {
+    font-size: 1rem;
+  }
+
+  .group-strip > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .group-pill {
+    min-width: 0;
+    padding: 9px 10px;
+  }
+
+  .group-pill strong,
+  .group-pill small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .pack-rating {
