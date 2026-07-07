@@ -64,7 +64,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.23</strong>
+            <strong>v0.0.24</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
@@ -312,6 +312,7 @@ function Database({
                 <small className="pack-stars" aria-label={`${(seededScore(pack.id, 35, 50) / 10).toFixed(1)} rating`}>
                   {getRatingStars(seededScore(pack.id, 35, 50) / 10)}
                 </small>
+                <small className="pack-downloads">{getPackDownloads(pack).toLocaleString()} downloads</small>
               </span>
               <span>
                 <strong>{pack.name}</strong>
@@ -347,6 +348,7 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
           <span>SMZIP pack</span>
           <strong>{pack.name}</strong>
           <small>{pack.songs.length} simfiles included</small>
+          <small>{getPackDownloads(pack).toLocaleString()} downloads</small>
         </div>
 
         <div className="title-qr">
@@ -435,6 +437,10 @@ function PackContents({ pack, onBack }: { pack: PackEntry; onBack: () => void })
 function getRatingStars(score: number) {
   const filled = Math.round(score);
   return Array.from({ length: 5 }, (_, index) => (index < filled ? "★" : "☆")).join("");
+}
+
+function getPackDownloads(pack: PackEntry) {
+  return seededScore(pack.id, 800, 9200);
 }
 
 function PackRating({ pack }: { pack: PackEntry }) {

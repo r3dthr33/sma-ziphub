@@ -529,6 +529,12 @@ select option {
   text-shadow: 0 0 10px rgba(125, 242, 255, 0.32);
 }
 
+.pack-score .pack-downloads {
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-shadow: none;
+}
+
 .level-chip {
   display: grid;
   min-height: 42px;
