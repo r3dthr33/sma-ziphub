@@ -218,18 +218,18 @@ h2 {
 
 .metrics-ladder {
   display: grid;
-  gap: 10px;
-  padding: 14px;
+  gap: 8px;
+  padding: 12px;
 }
 
 .metric-row {
   display: grid;
-  grid-template-columns: 150px 1fr auto;
-  gap: 14px;
+  grid-template-columns: 170px minmax(0, 1fr) minmax(132px, auto);
+  gap: 12px;
   align-items: center;
   width: 100%;
-  min-height: 92px;
-  padding: 16px;
+  min-height: 62px;
+  padding: 12px 14px;
   border: 1px solid transparent;
   border-radius: 6px;
   background: linear-gradient(90deg, rgba(125, 242, 255, 0.1), rgba(255, 54, 125, 0.05));
@@ -260,8 +260,12 @@ h2 {
 }
 
 .metric-row strong {
-  font-size: clamp(1.1rem, 2vw, 1.8rem);
-  line-height: 1.05;
+  overflow: hidden;
+  color: #eef7ff;
+  font-size: clamp(1rem, 1.45vw, 1.35rem);
+  line-height: 1.08;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chart-stack {
@@ -288,15 +292,15 @@ h2 {
 
 .level-row {
   display: grid;
-  grid-template-columns: 74px 1fr 44px;
-  gap: 10px;
+  grid-template-columns: minmax(108px, 0.42fr) minmax(180px, 1fr) 54px;
+  gap: 12px;
   align-items: center;
   color: #b9d0d9;
   font-size: 0.9rem;
 }
 
 .style-row {
-  grid-template-columns: minmax(128px, 0.8fr) minmax(90px, 1fr) 44px;
+  grid-template-columns: minmax(108px, 0.42fr) minmax(180px, 1fr) 54px;
 }
 
 .level-row span {
@@ -307,6 +311,7 @@ h2 {
 
 .level-row div {
   height: 12px;
+  width: 100%;
   overflow: hidden;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
@@ -934,6 +939,13 @@ details p {
 
   .metric-row {
     align-items: start;
+    min-height: 0;
+  }
+
+  .level-row,
+  .style-row {
+    grid-template-columns: minmax(86px, 0.5fr) minmax(92px, 1fr) 42px;
+    gap: 8px;
   }
 
   .detail-grid,
