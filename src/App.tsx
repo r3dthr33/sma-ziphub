@@ -51,6 +51,10 @@ function App() {
   }, [query, sortMode, styleFilter]);
 
   const stats = useMemo(() => buildStats(songs), []);
+  const visibleCounters = useMemo(
+    () => (activeSection === "database" ? buildPackCounters(filteredPacks) : buildPackCounters(packs)),
+    [activeSection, filteredPacks],
+  );
 
   return (
     <main className="app-shell">
@@ -79,9 +83,9 @@ function App() {
 
       <section className="hero-band">
         <div className="hero-console" aria-label="Pack scan status">
-          <span>{packs.length} pack</span>
-          <span>{stats.songCount} songs</span>
-          <span>{stats.chartCount} charts</span>
+          <span>{visibleCounters.packCount} packs</span>
+          <span>{visibleCounters.songCount} songs</span>
+          <span>{visibleCounters.chartCount} charts</span>
         </div>
       </section>
 
@@ -371,6 +375,14 @@ function sortPacks(a: PackEntry, b: PackEntry, mode: SortMode): number {
   if (mode === "level") return (getTopPackChart(b)?.level ?? 0) - (getTopPackChart(a)?.level ?? 0);
   if (mode === "downloads") return seededScore(b.id, 800, 9200) - seededScore(a.id, 800, 9200);
   return seededScore(b.id, 35, 50) - seededScore(a.id, 35, 50);
+}
+
+function buildPackCounters(records: PackEntry[]) {
+  return {
+    packCount: records.length,
+    songCount: records.reduce((sum, pack) => sum + pack.songs.length, 0),
+    chartCount: records.reduce((sum, pack) => sum + getPackChartCount(pack), 0),
+  };
 }
 
 function buildStats(records: SongRecord[]) {
