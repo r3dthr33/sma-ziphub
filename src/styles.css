@@ -93,21 +93,13 @@ button {
 }
 
 .brand-mark strong,
-.brand-mark small,
 .brand-lockup > span:last-child strong,
 .brand-lockup small {
   display: block;
 }
 
 .brand-mark strong {
-  font-size: 0.92rem;
-  font-weight: 950;
-  line-height: 1;
-}
-
-.brand-mark small {
-  color: #061015;
-  font-size: 0.57rem;
+  font-size: 0.82rem;
   font-weight: 950;
   line-height: 1;
 }
