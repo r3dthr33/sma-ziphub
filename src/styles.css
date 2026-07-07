@@ -965,8 +965,11 @@ details p {
   }
 
   .topbar {
+    display: grid;
     position: static;
     align-items: stretch;
+    gap: 10px;
+    padding: 10px;
   }
 
   .brand-lockup,
@@ -974,14 +977,44 @@ details p {
     width: 100%;
   }
 
+  .brand-lockup {
+    min-width: 0;
+    gap: 10px;
+    padding: 4px;
+  }
+
+  .brand-mark {
+    width: 58px;
+    height: 46px;
+  }
+
+  .brand-mark strong {
+    font-size: 0.72rem;
+  }
+
+  .brand-lockup > span:last-child strong {
+    font-size: 1rem;
+  }
+
+  .brand-lockup small {
+    font-size: 0.82rem;
+  }
+
   .nav-tabs {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    padding: 3px;
   }
 
   .nav-tabs button {
     min-width: 0;
-    padding: 12px 8px;
+    min-height: 42px;
+    padding: 8px 4px;
+    overflow: hidden;
+    font-size: clamp(0.76rem, 3.5vw, 0.92rem);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .hero-band {

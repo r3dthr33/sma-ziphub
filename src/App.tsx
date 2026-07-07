@@ -62,7 +62,7 @@ function App() {
       <header className="topbar">
         <button className="brand-lockup" onClick={() => setActiveSection("summary")} type="button">
           <span className="brand-mark">
-            <strong>v0.0.13</strong>
+            <strong>v0.0.14</strong>
           </span>
           <span>
             <strong>SMAMX Vault</strong>
