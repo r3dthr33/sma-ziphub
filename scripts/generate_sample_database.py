@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-PACK_DIR = Path(r"E:\Games\StepMania AMX 6\Songs\Aldo_MX")
+SONGS_DIR = Path(r"E:\Games\StepMania AMX 6\Songs")
 OUTPUT_FILE = Path("data/sample-database.json")
 
 AUDIO_EXTENSIONS = {".mp3", ".ogg", ".oga", ".wav", ".flac", ".aac", ".m4a", ".opus", ".wma"}
@@ -46,7 +46,7 @@ STEP_TYPES = {
 
 
 def read_text(path: Path) -> str:
-    for encoding in ("utf-8-sig", "utf-8", "cp1252", "latin-1"):
+    for encoding in ("utf-8-sig", "utf-8", "cp949", "euc-kr", "shift_jis", "cp1252", "latin-1"):
         try:
             return path.read_text(encoding=encoding)
         except UnicodeDecodeError:
@@ -85,6 +85,24 @@ def bpm_summary(bpms: str) -> dict[str, object] | None:
         "max": max(values),
         "changes": len(values),
         "raw": bpms,
+    }
+
+
+def display_bpm_summary(display_bpm: str) -> dict[str, object] | None:
+    values: list[float] = []
+    for value in re.findall(r"-?\d+(?:\.\d+)?", display_bpm):
+        try:
+            values.append(float(value))
+        except ValueError:
+            pass
+    if not values:
+        return None
+    return {
+        "display": display_bpm.strip(),
+        "min": min(values),
+        "max": max(values),
+        "changes": len(values),
+        "raw": display_bpm.strip(),
     }
 
 
@@ -181,6 +199,7 @@ def find_main_audio(song_dir: Path, tags: dict[str, str]) -> dict[str, object] |
         and path.suffix.lower() in AUDIO_EXTENSIONS
         and "preview" not in path.stem.lower()
         and "sample" not in path.stem.lower()
+        and "intro" not in path.stem.lower()
     ]
 
     if tagged_music:
@@ -194,7 +213,8 @@ def find_main_audio(song_dir: Path, tags: dict[str, str]) -> dict[str, object] |
     if not candidates:
         return None
 
-    path = candidates[0]
+    song_named = [candidate for candidate in candidates if candidate.stem.lower() == "song"]
+    path = song_named[0] if song_named else max(candidates, key=lambda candidate: candidate.stat().st_size)
     return {
         "file": path.name,
         "durationSeconds": audio_duration(path),
@@ -225,7 +245,7 @@ def build_song_record(song_dir: Path) -> dict[str, object]:
             tags = file_tags
         charts.extend(parse_notes(text, chart_file.name))
 
-    bpm = bpm_summary(tags.get("BPMS", ""))
+    bpm = bpm_summary(tags.get("BPMS", "")) or display_bpm_summary(tags.get("DISPLAYBPM", ""))
     return {
         "id": slugify(song_dir.name),
         "folderName": song_dir.name,
@@ -256,29 +276,43 @@ def slugify(value: str) -> str:
     return slug.strip("-") or "song"
 
 
-def main() -> None:
-    if not PACK_DIR.exists():
-        raise SystemExit(f"Pack directory does not exist: {PACK_DIR}")
-
+def build_pack_record(pack_dir: Path) -> dict[str, object]:
     songs = [
         build_song_record(path)
-        for path in sorted(PACK_DIR.iterdir(), key=lambda item: item.name.lower())
+        for path in sorted(pack_dir.iterdir(), key=lambda item: item.name.lower())
         if path.is_dir()
     ]
+    return {
+        "id": slugify(pack_dir.name),
+        "name": pack_dir.name,
+        "sourcePath": str(pack_dir),
+        "songCount": len(songs),
+        "songs": songs,
+    }
+
+
+def main() -> None:
+    if not SONGS_DIR.exists():
+        raise SystemExit(f"Songs directory does not exist: {SONGS_DIR}")
+
+    packs = [
+        build_pack_record(path)
+        for path in sorted(SONGS_DIR.iterdir(), key=lambda item: item.name.lower())
+        if path.is_dir()
+    ]
+    total_songs = sum(int(pack["songCount"]) for pack in packs)
     payload = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "sourcePath": str(PACK_DIR),
-        "pack": {
-            "name": PACK_DIR.name,
-            "songCount": len(songs),
-            "songs": songs,
-        },
+        "sourcePath": str(SONGS_DIR),
+        "packCount": len(packs),
+        "songCount": total_songs,
+        "packs": packs,
     }
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote {OUTPUT_FILE} with {len(songs)} songs.")
+    print(f"Wrote {OUTPUT_FILE} with {len(packs)} packs and {total_songs} songs.")
 
 
 if __name__ == "__main__":

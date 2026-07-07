@@ -43,11 +43,22 @@ export type SongRecord = {
   steps: StepChart[];
 };
 
+export type PackRecord = {
+  id: string;
+  name: string;
+  sourcePath: string;
+  songCount: number;
+  songs: SongRecord[];
+};
+
 export type CatalogDatabase = {
   schemaVersion: number;
   generatedAt: string;
   sourcePath: string;
-  pack: {
+  packCount?: number;
+  songCount?: number;
+  packs?: PackRecord[];
+  pack?: {
     name: string;
     songCount: number;
     songs: SongRecord[];

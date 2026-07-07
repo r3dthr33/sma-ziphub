@@ -1,18 +1,23 @@
 import database from "../data/sample-database.json";
-import type { CatalogDatabase, SongRecord, StepChart } from "./types";
+import type { CatalogDatabase, PackRecord, SongRecord, StepChart } from "./types";
 
 export const catalog = database as CatalogDatabase;
-export const songs = catalog.pack.songs;
-export const packs = [
-  {
-    id: slugify(catalog.pack.name),
-    name: catalog.pack.name,
-    sourcePath: catalog.sourcePath,
-    songs,
-  },
-];
+export const packs: PackRecord[] =
+  catalog.packs ??
+  (catalog.pack
+    ? [
+        {
+          id: slugify(catalog.pack.name),
+          name: catalog.pack.name,
+          sourcePath: catalog.sourcePath,
+          songCount: catalog.pack.songCount,
+          songs: catalog.pack.songs,
+        },
+      ]
+    : []);
+export const songs = packs.flatMap((pack) => pack.songs);
 
-export type PackEntry = (typeof packs)[number];
+export type PackEntry = PackRecord;
 
 export function formatDuration(seconds: number | null | undefined): string {
   if (!seconds) return "Unknown";

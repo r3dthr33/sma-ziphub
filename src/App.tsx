@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import {
-  catalog,
   formatBytes,
   formatDuration,
   getAllStyles,
@@ -60,7 +59,7 @@ function App() {
           <span className="brand-mark">AMX</span>
           <span>
             <strong>SMAMX Vault</strong>
-            <small>{catalog.pack.name} prototype</small>
+            <small>{packs.length} pack database</small>
           </span>
         </button>
 
@@ -119,7 +118,7 @@ function Summary({ stats, onOpenDatabase }: { stats: ReturnType<typeof buildStat
         <div className="pulse-ring" />
         <p>Pack telemetry</p>
         <strong>{stats.packName}</strong>
-        <span>One SMZIP entry, multiple simfiles inside, one QR for the whole download.</span>
+        <span>Each SMZIP entry opens to show its simfiles, with one QR for the whole download.</span>
       </div>
 
       <div className="metrics-ladder">
@@ -389,6 +388,8 @@ function buildStats(records: SongRecord[]) {
   const allCharts = records.flatMap((song) => song.steps.map((step) => ({ song, step })));
   const totalSeconds = records.reduce((sum, song) => sum + (song.audio?.durationSeconds ?? 0), 0);
   const chartCount = allCharts.length;
+  const topDownloadedPack = [...packs].sort((a, b) => seededScore(b.id, 800, 9200) - seededScore(a.id, 800, 9200))[0];
+  const topRatedPack = [...packs].sort((a, b) => seededScore(b.id, 35, 50) - seededScore(a.id, 35, 50))[0];
   const levelBuckets = [
     { label: "Lv 1-9", count: allCharts.filter(({ step }) => (step.level ?? 0) <= 9).length },
     { label: "Lv 10-17", count: allCharts.filter(({ step }) => (step.level ?? 0) >= 10 && (step.level ?? 0) <= 17).length },
@@ -404,21 +405,21 @@ function buildStats(records: SongRecord[]) {
   );
 
   return {
-    packName: catalog.pack.name,
+    packName: `${packs.length} SMZIP packs`,
     songCount: records.length,
     chartCount,
     totalMinutes: Math.round(totalSeconds / 60),
     mostDownloaded: {
-      title: catalog.pack.name,
-      downloads: seededScore(catalog.pack.name, 800, 9200),
+      title: topDownloadedPack.name,
+      downloads: seededScore(topDownloadedPack.id, 800, 9200),
     },
     bestRated: {
-      title: catalog.pack.name,
-      rating: seededScore(catalog.pack.name, 35, 50) / 10,
+      title: topRatedPack.name,
+      rating: seededScore(topRatedPack.id, 35, 50) / 10,
     },
     hardest,
     totalAudio: {
-      title: catalog.pack.name,
+      title: `${packs.length} packs`,
       duration: totalSeconds,
     },
     levelBuckets,
